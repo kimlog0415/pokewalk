@@ -1,0 +1,56 @@
+@import './sprites.css';
+
+.encounter-scene {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.encounter-bg {
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.habitat-grassland  { background-image: url('../assets/backgrounds/bg_grassland.png'); }
+.habitat-mountain   { background-image: url('../assets/backgrounds/bg_mountain.png'); }
+.habitat-forest     { background-image: url('../assets/backgrounds/bg_forest.png'); }
+.habitat-urban      { background-image: url('../assets/backgrounds/bg_urban.png'); }
+.habitat-water_edge { background-image: url('../assets/backgrounds/bg_water_edge.png'); }
+.habitat-sea        { background-image: url('../assets/backgrounds/bg_sea.png'); }
+.habitat-cave       { background-image: url('../assets/backgrounds/bg_cave.png'); }
+
+.encounter-char {
+  bottom: 55px;
+  left: 28%;
+  transform: translateX(-50%);
+}
+
+.encounter-pokemon {
+  position: absolute;
+  bottom: 55px;
+  right: 20%;
+  image-rendering: pixelated;
+}
+
+.encounter-dialog {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(0,0,0,0.75);
+  border-top: 2px solid #fff;
+  padding: 6px 8px;
+  font-size: 8px;
+  color: #fff;
+}
+
+@keyframes appearBounce {
+  0%   { transform: scale(0) translateY(20px); opacity: 0; }
+  70%  { transform: scale(1.15) translateY(-5px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.appear-anim {
+  animation: appearBounce 0.4s ease-out forwards;
+}

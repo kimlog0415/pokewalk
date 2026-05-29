@@ -1,0 +1,50 @@
+.battle-scene {
+  width: 100%;
+  height: 100%;
+  background: #1a1a3a;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.battle-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #2a2a5a 0%, #0a0a1a 100%);
+}
+
+.battle-pokemon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.battle-pokemon img {
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 8px rgba(255,200,0,0.5));
+}
+
+.battle-pokemon-name {
+  font-size: 8px;
+  color: #ffcc00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.battle-dialog {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(0,0,0,0.8);
+  border-top: 2px solid #fff;
+  padding: 6px 8px;
+  font-size: 8px;
+  color: #fff;
+  z-index: 2;
+}

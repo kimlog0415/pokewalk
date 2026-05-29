@@ -1,0 +1,30 @@
+@import './sprites.css';
+
+.travel-scene {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.travel-bg {
+  background-image: url('../assets/backgrounds/bg_grassland.png');
+}
+
+.travel-char {
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.travel-text {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 8px;
+  color: #fff;
+  background: rgba(0,0,0,0.65);
+  padding: 6px 8px;
+  border-top: 2px solid #fff;
+}

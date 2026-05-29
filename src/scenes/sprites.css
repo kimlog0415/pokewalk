@@ -1,0 +1,47 @@
+/* ---- Character sprite sheet setup ----
+   Sheet: 2048×701px, 3 frames side-by-side
+   Display size: 64×66px (frame ratio ≈ 682.67/701)
+   background-size: 192px auto  (3 × 64px)
+   Animate background-position-x: 0 → -192px in steps(3)
+------------------------------------------------- */
+
+.char {
+  width: 64px;
+  height: 66px;
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 192px auto;
+  position: absolute;
+}
+
+.char-walk {
+  background-image: url('../assets/sprites/char_walk.png');
+}
+
+.char-walk-back {
+  background-image: url('../assets/sprites/char_walk_back.png');
+}
+
+@keyframes charWalk {
+  from { background-position-x: 0; }
+  to   { background-position-x: -192px; }
+}
+
+.anim-walk {
+  animation: charWalk 0.45s steps(3) infinite;
+}
+
+/* Background scroll animation */
+@keyframes bgScroll {
+  from { background-position-x: 0%; }
+  to   { background-position-x: -50%; }
+}
+
+.bg-scroll {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  animation: bgScroll 8s linear infinite;
+}

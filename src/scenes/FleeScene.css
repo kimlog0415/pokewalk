@@ -1,0 +1,30 @@
+@import './sprites.css';
+
+.flee-scene {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.flee-bg {
+  background-image: url('../assets/backgrounds/bg_grassland.png');
+  animation-direction: reverse;
+}
+
+.flee-char {
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.flee-dialog {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(0,0,0,0.75);
+  border-top: 2px solid #fff;
+  padding: 6px 8px;
+  font-size: 8px;
+  color: #aaa;
+}

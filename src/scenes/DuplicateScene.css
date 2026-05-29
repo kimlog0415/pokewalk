@@ -1,0 +1,42 @@
+@import './sprites.css';
+
+.duplicate-scene {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.duplicate-bg {
+  background-image: url('../assets/backgrounds/bg_grassland.png');
+  animation-direction: reverse;
+}
+
+.duplicate-char {
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.duplicate-pokemon {
+  position: absolute;
+  bottom: 55px;
+  right: 20%;
+  image-rendering: pixelated;
+}
+
+.duplicate-pokemon.faded {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.duplicate-dialog {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(0,0,0,0.75);
+  border-top: 2px solid #fff;
+  padding: 6px 8px;
+  font-size: 8px;
+  color: #ffcc00;
+}
