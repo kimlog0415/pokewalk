@@ -109,7 +109,7 @@ export default function App() {
       setForkPhase('walking');
       setState(s => ({ ...s, path: newPath }));
     } else {
-      go('encounter', { path: newPath, currentHabitat: getHabitat(newPath) });
+      withFade(() => go('encounter', { path: newPath, currentHabitat: getHabitat(newPath) }));
     }
   }
 
