@@ -64,11 +64,27 @@ export default function App() {
   const [homePhase, setHomePhase] = useState('walking');
   const [forkPhase, setForkPhase] = useState('walking');
   const [battleReveal, setBattleReveal] = useState(null); // { player, cpu, result }
+  const [fading, setFading] = useState(false);
   const revealTimerRef = useRef(null);
+  const fadingRef = useRef(false);
   const { pokedex, catchPokemon, isDuplicate } = usePokedex();
 
   const go = useCallback((nextScene, patch = {}) => {
     setState(s => ({ ...s, scene: nextScene, ...patch }));
+  }, []);
+
+  // 검은 오버레이 페이드: 250ms 암전 → 씬 변경 → 250ms 복귀
+  const withFade = useCallback((callback) => {
+    if (fadingRef.current) return;
+    fadingRef.current = true;
+    setFading(true);
+    setTimeout(() => {
+      callback();
+      setTimeout(() => {
+        fadingRef.current = false;
+        setFading(false);
+      }, 50);
+    }, 250);
   }, []);
 
   const onHomeQuestion = useCallback(() => setHomePhase('question'), []);
@@ -76,12 +92,11 @@ export default function App() {
   const onHomeStay     = useCallback(() => setHomePhase('walking'), []);
 
   const startAdventure = useCallback(() => {
-    go('travel', { path: [], currentHabitat: null, currentPokemon: null, battleRound: 0 });
-  }, [go]);
+    withFade(() => go('travel', { path: [], currentHabitat: null, currentPokemon: null, battleRound: 0 }));
+  }, [go, withFade]);
 
   function onTravelDone() {
-    setForkPhase('walking');
-    go('fork');
+    withFade(() => { setForkPhase('walking'); go('fork'); });
   }
 
   function onForkArrived() {
@@ -126,8 +141,7 @@ export default function App() {
   useEffect(() => () => clearTimeout(revealTimerRef.current), []);
 
   function goHome() {
-    setHomePhase('walking');
-    go('home');
+    withFade(() => { setHomePhase('walking'); go('home'); });
   }
 
   return (
@@ -158,7 +172,8 @@ export default function App() {
               {state.scene === 'battle'    && <BattleScene pokemon={state.currentPokemon} round={state.battleRound} reveal={battleReveal} />}
               {state.scene === 'caught'    && <CaughtScene pokemon={state.currentPokemon} onDone={goHome} />}
               {state.scene === 'flee'      && <FleeScene habitat={state.currentHabitat} onDone={goHome} />}
-              {state.scene === 'duplicate' && <DuplicateScene pokemon={state.currentPokemon} onDone={goHome} />}
+              {state.scene === 'duplicate' && <DuplicateScene pokemon={state.currentPokemon} habitat={state.currentHabitat} onDone={goHome} />}
+              <div className={`screen-fade${fading ? ' active' : ''}`} />
             </div>
           </div>
 

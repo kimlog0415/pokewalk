@@ -4,7 +4,7 @@ import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
 import './DuplicateScene.css';
 
-export default function DuplicateScene({ pokemon, onDone }) {
+export default function DuplicateScene({ pokemon, habitat, onDone }) {
   const lang = useLang();
   const t = T[lang];
   const name = pokemon?.names?.[lang] ?? pokemon?.name;
@@ -16,7 +16,7 @@ export default function DuplicateScene({ pokemon, onDone }) {
 
   return (
     <div className="duplicate-scene">
-      <div className="duplicate-bg" />
+      <div className={`duplicate-bg habitat-${habitat ?? 'grassland'}`} />
       <div className="char char-walk-back anim-walk-out duplicate-char" />
       {pokemon && (
         <div className="duplicate-pokemon faded">

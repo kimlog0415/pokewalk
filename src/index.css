@@ -306,6 +306,20 @@ body {
   letter-spacing: 1px;
 }
 
+/* ---------- Screen fade overlay ---------- */
+.screen-fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.screen-fade.active {
+  opacity: 1;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 500px) {
   .gameboy {
