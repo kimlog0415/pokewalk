@@ -22,6 +22,60 @@
 
 ---
 
+## 현재 구현 현황 (2026-05-30 기준)
+
+### 완료된 것
+
+**핵심 구조**
+- 8개 scene 상태머신 (`App.jsx`) — home/travel/fork/encounter/battle/caught/flee/duplicate
+- 갈림길 4단계 이진트리 → 16종착지 서식지 매핑 (`data/habitats.js`)
+- PokeAPI 연동 (포켓몬 정보 + 다국어 이름 + 도감 설명)
+- localStorage 도감 (`hooks/usePokedex.js`) — `{ id, names:{ko,ja,en} }` 배열 저장
+- 자동 선택 타이머 (`hooks/useAutoTimer.js`) — resetKey로 라운드마다 재시작
+
+**다국어 (KO/JA/EN)**
+- 언어 게임팩 카트리지 UI (상단, 클릭 시 꽂히는 연출)
+- `contexts/LangContext.js` + `data/translations.js`
+- 폰트: Galmuri11(한) + DotGothic16(일) + Press Start 2P(영) — `index.html` CDN
+
+**씬별 연출**
+- 캐릭터 스프라이트 시트 애니메이션 (2048×701, 3프레임, `scenes/sprites.css`)
+- 배경 스크롤 (우→좌, 0~-260px 범위, 이미지 끊김 방지)
+- travel/fork: 배경 시작 위치 랜덤 (음수 animation-delay, 루프 점프 방지 위해 딜레이 상한 제한)
+- encounter: 캐릭터 왼쪽에서 걸어들어옴(anim-walk-in), 배경 고정, 포켓몬 drop-shadow 글로우
+- fork: 걷기(grassland 스크롤) → 도착(bg_fork.png 고정, 이정표)
+- flee/duplicate: 캐릭터 왼쪽으로 걸어나감(anim-walk-out)
+- duplicate: 중복 포켓몬 흑백 + 서서히 fade-out
+- battle: 가위바위보 결과 reveal 카드 (나 vs 상대 손 이모지 + 결과 색상)
+- caught: 반짝임 효과
+
+**도감 (home)**
+- 5열 그리드, 스크롤바 숨김, hover 시 이미지 어둡게 + 한국어 이름 툴팁
+- 슬롯 클릭 → 상세 카드 모달 (official-artwork + 이름 + 도감설명, 설명 스크롤 가능)
+
+**스프라이트 방향**
+- `data/faceRight.js` — 오른쪽 보는 포켓몬 ID는 scaleX(-1)로 좌우반전
+- `tools/face-checker.html` — 방향 수동 태깅 도구 (standalone)
+
+**기타**
+- 게임기 프레임 UI, A/B 버튼은 회색(장식용), 실제 조작 버튼 강조
+- dev 단축: URL `?scene=battle|encounter|fork|...` 로 특정 씬 바로 진입
+
+### 에셋 현황
+- 배경: bg_grassland/mountain/forest/urban/water_edge/sea/cave/fork (전부 3168×1344)
+- 캐릭터: char_walk, char_walk_back (2048×701, 3프레임)
+- 포켓몬: PokeAPI (small + official-artwork)
+
+### 남은 작업 (TODO)
+- [ ] **BGM/SFX 추가** — 아직 사운드 전무. `bgm_home/travel/battle/caught`, `sfx_*` 8종 필요
+- [ ] **화면 전환 트랜지션** — 씬 간 페이드 인/아웃 (현재 즉시 전환)
+- [ ] **GitHub Pages 배포 설정** — `vite.config.js`에 `base: '/pokewalk/'` 추가 + 배포 워크플로우
+- [ ] **도감 완성도 표시/리워드** — 151마리 수집 진행률 강조, 완성 시 연출
+- [ ] **모바일 반응형 점검** — 480px 이하 레이아웃 실기기 확인
+- [ ] (검토) 가위바위보 손 이모지 → 픽셀아트 톤에 맞는지, 텍스트로 대체 여부
+
+---
+
 ## 프로젝트 개요
 
 포켓몬 1세대(151마리) 도감 완성을 목표로 하는 웹 기반 탐험 게임.
