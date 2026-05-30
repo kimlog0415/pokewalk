@@ -80,18 +80,21 @@ export default function App() {
     setState(s => ({ ...s, scene: nextScene, ...patch }));
   }, []);
 
-  // 검은 오버레이 페이드: 250ms 암전 → 씬 변경 → 250ms 복귀
+  // 검은 오버레이 페이드: 페인트 확인 후 250ms 암전 → 씬 변경 → 페이드아웃
   const withFade = useCallback((callback) => {
     if (fadingRef.current) return;
     fadingRef.current = true;
     setFading(true);
-    setTimeout(() => {
-      callback();
+    // 더블 RAF: React 렌더 + 브라우저 페인트 완료 후 타이머 시작 (Edge 등 대응)
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       setTimeout(() => {
-        fadingRef.current = false;
-        setFading(false);
-      }, 50);
-    }, 250);
+        callback();
+        setTimeout(() => {
+          fadingRef.current = false;
+          setFading(false);
+        }, 50);
+      }, 250);
+    }));
   }, []);
 
   function handleStart() {
