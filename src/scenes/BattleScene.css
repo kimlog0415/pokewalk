@@ -59,3 +59,54 @@
   color: #fff;
   z-index: 2;
 }
+
+.battle-dialog.result-win  { color: #6bd66b; border-top-color: #6bd66b; }
+.battle-dialog.result-lose { color: #ff6b6b; border-top-color: #ff6b6b; }
+.battle-dialog.result-draw { color: #ffcc00; border-top-color: #ffcc00; }
+
+/* ---- 가위바위보 결과 카드 ---- */
+.rps-reveal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 0, 0, 0.82);
+  border: 2px solid #fff;
+  border-radius: 8px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  animation: rpsPop 0.25s ease-out;
+}
+
+@keyframes rpsPop {
+  from { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+}
+
+.rps-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.rps-label {
+  font-size: 9px;
+  color: #ccc;
+  letter-spacing: 1px;
+}
+
+.rps-hand {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.rps-vs {
+  font-size: 11px;
+  color: #ffcc00;
+  letter-spacing: 1px;
+}

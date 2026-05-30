@@ -62,6 +62,8 @@ export default function App() {
   const [lang, setLang] = useState('ko');
   const [state, setState] = useState(getInitialState);
   const [forkPhase, setForkPhase] = useState('walking');
+  const [battleReveal, setBattleReveal] = useState(null); // { player, cpu, result }
+  const revealTimerRef = useRef(null);
   const { pokedex, catchPokemon, isDuplicate } = usePokedex();
 
   const go = useCallback((nextScene, patch = {}) => {
@@ -99,16 +101,24 @@ export default function App() {
     }
   }
 
-  function onBattleResult(result) {
-    if (result === 'win') {
-      catchPokemon({ id: state.currentPokemon.id, names: state.currentPokemon.names });
-      go('caught');
-    } else if (result === 'lose') {
-      go('flee');
-    } else {
-      go('battle', { battleRound: state.battleRound + 1 });
-    }
+  // 가위바위보: player/cpu 선택을 받아 reveal 표시 후 결과 처리
+  function onBattlePlay(player, cpu) {
+    const result = rpsResult(player, cpu);
+    setBattleReveal({ player, cpu, result });
+    revealTimerRef.current = setTimeout(() => {
+      setBattleReveal(null);
+      if (result === 'win') {
+        catchPokemon({ id: state.currentPokemon.id, names: state.currentPokemon.names });
+        go('caught');
+      } else if (result === 'lose') {
+        go('flee');
+      } else {
+        go('battle', { battleRound: state.battleRound + 1 });
+      }
+    }, 1500);
   }
+
+  useEffect(() => () => clearTimeout(revealTimerRef.current), []);
 
   function goHome() { go('home'); }
 
@@ -137,7 +147,7 @@ export default function App() {
               {state.scene === 'travel'    && <TravelScene onDone={onTravelDone} />}
               {state.scene === 'fork'      && <ForkScene step={state.path.length} phase={forkPhase} onArrived={onForkArrived} />}
               {state.scene === 'encounter' && <EncounterScene habitat={state.currentHabitat} onReady={onEncounterReady} />}
-              {state.scene === 'battle'    && <BattleScene pokemon={state.currentPokemon} round={state.battleRound} />}
+              {state.scene === 'battle'    && <BattleScene pokemon={state.currentPokemon} round={state.battleRound} reveal={battleReveal} />}
               {state.scene === 'caught'    && <CaughtScene pokemon={state.currentPokemon} onDone={goHome} />}
               {state.scene === 'flee'      && <FleeScene onDone={goHome} />}
               {state.scene === 'duplicate' && <DuplicateScene pokemon={state.currentPokemon} onDone={goHome} />}
@@ -150,8 +160,8 @@ export default function App() {
               {state.scene === 'fork' && forkPhase === 'arrived' && (
                 <ForkButtons onChoice={onForkChoice} />
               )}
-              {state.scene === 'battle' && (
-                <BattleButtons onResult={onBattleResult} round={state.battleRound} />
+              {state.scene === 'battle' && !battleReveal && (
+                <BattleButtons onPlay={onBattlePlay} round={state.battleRound} />
               )}
             </div>
             <div className="action-buttons">
@@ -194,7 +204,7 @@ function ForkButtons({ onChoice }) {
   );
 }
 
-function BattleButtons({ onResult, round }) {
+function BattleButtons({ onPlay, round }) {
   const t = T[useLang()];
   const RPS_LABELS = [t.scissors, t.rock, t.paper];
   const [flash, setFlash] = useState(null);
@@ -205,10 +215,10 @@ function BattleButtons({ onResult, round }) {
   const ratio = useAutoTimer(3, () => {
     const player = randomRps();
     setFlash(player);
-    pendingRef.current = setTimeout(() => onResult(rpsResult(player, randomRps())), 500);
+    pendingRef.current = setTimeout(() => onPlay(player, randomRps()), 500);
   }, true, round);
 
-  function choose(key) { onResult(rpsResult(key, randomRps())); }
+  function choose(key) { onPlay(key, randomRps()); }
 
   return (
     <>

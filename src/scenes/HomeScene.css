@@ -165,14 +165,26 @@
   color: #ccc;
   text-align: center;
   line-height: 1.9;
-  max-height: 70px;
+  max-height: 72px;
   overflow-y: auto;
-  scrollbar-width: none;
   margin: 0;
+  width: 100%;
+  padding: 0 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #ffcc00 transparent;
 }
 
 .card-flavor::-webkit-scrollbar {
-  display: none;
+  width: 5px;
+}
+
+.card-flavor::-webkit-scrollbar-thumb {
+  background: #ffcc00;
+  border-radius: 3px;
+}
+
+.card-flavor::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* ---- Start button ---- */

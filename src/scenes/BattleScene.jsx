@@ -3,10 +3,17 @@ import { T } from "../data/translations";
 import { flipStyle } from "../data/faceRight";
 import "./BattleScene.css";
 
-export default function BattleScene({ pokemon, round }) {
+const RPS_EMOJI = { scissors: "✌️", rock: "✊", paper: "🖐️" };
+
+export default function BattleScene({ pokemon, round, reveal }) {
   const lang = useLang();
   const t = T[lang];
   const name = pokemon?.names?.[lang] ?? pokemon?.name;
+
+  const resultText =
+    reveal?.result === "win" ? t.rpsWin
+      : reveal?.result === "lose" ? t.rpsLose
+      : t.rpsDraw;
 
   return (
     <div className="battle-scene">
@@ -18,8 +25,23 @@ export default function BattleScene({ pokemon, round }) {
           <div className="battle-pokemon-name">{name}</div>
         </div>
       )}
-      <div className="battle-dialog">
-        {round === 0 ? t.rps : t.retry(round)}
+
+      {reveal && (
+        <div className="rps-reveal">
+          <div className="rps-side">
+            <span className="rps-label">{t.opponent}</span>
+            <span className="rps-hand">{RPS_EMOJI[reveal.cpu]}</span>
+          </div>
+          <span className="rps-vs">VS</span>
+          <div className="rps-side">
+            <span className="rps-label">{t.me}</span>
+            <span className="rps-hand">{RPS_EMOJI[reveal.player]}</span>
+          </div>
+        </div>
+      )}
+
+      <div className={`battle-dialog${reveal ? ` result-${reveal.result}` : ""}`}>
+        {reveal ? resultText : (round === 0 ? t.rps : t.retry(round))}
       </div>
     </div>
   );
