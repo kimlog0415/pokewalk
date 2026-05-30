@@ -22,10 +22,17 @@
   background-position: center;
 }
 
-.fork-char {
+/* grassland 걷기 중 캐릭터 (transform ok — anim-walk-in 안 씀) */
+.fork-char-walk {
   bottom: 55px;
   left: 38%;
   transform: translateX(-50%);
+}
+
+/* fork bg walk-in / 정지 위치 (transform 없음 — anim-walk-in 충돌 방지) */
+.fork-char {
+  bottom: 55px;
+  left: 25%;
 }
 
 .fork-dialog {

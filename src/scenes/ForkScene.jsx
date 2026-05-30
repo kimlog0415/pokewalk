@@ -1,33 +1,57 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import './ForkScene.css';
 
 export default function ForkScene({ step, phase, onArrived }) {
   const t = T[useLang()];
-  // step마다 배경 시작 위치를 랜덤하게 변경
-  // 최대 딜레이 -8s: fork 걷기 2초 안에 루프 점프 없음 (2/10*260 + 8/10*260 = 260)
-  const bgDelay = useMemo(
-    () => `-${(Math.random() * 8).toFixed(2)}s`,
-    [step]
-  );
+  const bgDelay = useMemo(() => `-${(Math.random() * 8).toFixed(2)}s`, [step]);
 
+  // fork bg 표시 여부 / 캐릭터 정지 여부 (ForkScene 내부 서브 페이즈)
+  const [showFork, setShowFork] = useState(false);
+  const [stopped,  setStopped]  = useState(false);
+
+  // onArrived ref: effect deps에서 제외해 함수 교체로 타이머 재시작 방지
+  const onArrivedRef = useRef(onArrived);
+  useEffect(() => { onArrivedRef.current = onArrived; }, [onArrived]);
+
+  // walking phase: 2s grassland 스크롤 → fork bg 전환
   useEffect(() => {
     if (phase !== 'walking') return;
-    const timer = setTimeout(onArrived, 2000);
-    return () => clearTimeout(timer);
+    setShowFork(false);
+    setStopped(false);
+    const t = setTimeout(() => setShowFork(true), 2000);
+    return () => clearTimeout(t);
   }, [phase, step]);
 
-  const isWalking = phase === 'walking';
+  // fork bg 등장 → 2s walk-in → 정지 + 버튼 활성화
+  useEffect(() => {
+    if (!showFork) return;
+    const t = setTimeout(() => {
+      setStopped(true);
+      onArrivedRef.current();
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [showFork]);
 
   return (
     <div className="fork-scene">
-      <div
-        className={isWalking ? 'fork-bg-walk bg-scroll' : 'fork-bg-arrived'}
-        style={isWalking ? { animationDelay: bgDelay } : undefined}
-      />
-      <div className={`char char-walk fork-char${isWalking ? ' anim-walk' : ''}`} />
-      {!isWalking && (
+      {showFork ? (
+        <div className="fork-bg-arrived" />
+      ) : (
+        <div
+          className="fork-bg-walk bg-scroll"
+          style={{ animationDelay: bgDelay }}
+        />
+      )}
+
+      {showFork ? (
+        <div className={`char char-walk fork-char${stopped ? '' : ' anim-walk-in'}`} />
+      ) : (
+        <div className="char char-walk anim-walk fork-char-walk" />
+      )}
+
+      {stopped && (
         <div className="fork-dialog">
           <p>{t.fork}</p>
           <p className="fork-step">{t.forkStep(step + 1)}</p>
