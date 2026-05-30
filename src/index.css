@@ -306,6 +306,46 @@ body {
   letter-spacing: 1px;
 }
 
+/* ---------- Start overlay ---------- */
+.start-overlay {
+  position: absolute;
+  inset: 0;
+  background: #0a0a1a;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: opacity 0.4s ease;
+  user-select: none;
+}
+.start-overlay.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+.start-title {
+  font-size: 18px;
+  color: #ffcc00;
+  letter-spacing: 4px;
+}
+.start-char {
+  width: 64px;
+  height: 66px;
+  image-rendering: pixelated;
+}
+.start-prompt {
+  font-size: 9px;
+  color: #ccc;
+  letter-spacing: 3px;
+  animation: startBlink 1.2s step-end infinite;
+}
+@keyframes startBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 /* ---------- Screen fade overlay ---------- */
 .screen-fade {
   position: absolute;

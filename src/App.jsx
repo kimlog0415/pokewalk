@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import charFrontUrl from './assets/sprites/char_front.png';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { useBgm } from './hooks/useBgm';
@@ -66,6 +67,8 @@ export default function App() {
   const [forkPhase, setForkPhase] = useState('walking');
   const [battleReveal, setBattleReveal] = useState(null); // { player, cpu, result }
   const [fading, setFading] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [startFading, setStartFading] = useState(false);
   const revealTimerRef = useRef(null);
   const fadingRef = useRef(false);
   const { pokedex, catchPokemon, isDuplicate } = usePokedex();
@@ -88,6 +91,11 @@ export default function App() {
       }, 50);
     }, 250);
   }, []);
+
+  function handleStart() {
+    setStartFading(true);
+    setTimeout(() => setStarted(true), 400);
+  }
 
   const onHomeQuestion = useCallback(() => setHomePhase('question'), []);
   const onHomeGoOut    = useCallback(() => setHomePhase('exit'), []);
@@ -167,7 +175,7 @@ export default function App() {
           <div className="screen-surround">
             <div className="screen-label">PokeWalk</div>
             <div className="screen">
-              {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={onHomeQuestion} onStay={onHomeStay} onDone={startAdventure} />}
+              {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={started ? onHomeQuestion : () => {}} onStay={onHomeStay} onDone={startAdventure} />}
               {state.scene === 'travel'    && <TravelScene onDone={onTravelDone} />}
               {state.scene === 'fork'      && <ForkScene step={state.path.length} phase={forkPhase} onArrived={onForkArrived} />}
               {state.scene === 'encounter' && <EncounterScene habitat={state.currentHabitat} onReady={onEncounterReady} />}
@@ -176,6 +184,16 @@ export default function App() {
               {state.scene === 'flee'      && <FleeScene habitat={state.currentHabitat} onDone={goHome} />}
               {state.scene === 'duplicate' && <DuplicateScene pokemon={state.currentPokemon} habitat={state.currentHabitat} onDone={goHome} />}
               <div className={`screen-fade${fading ? ' active' : ''}`} />
+              {!started && (
+                <div
+                  className={`start-overlay${startFading ? ' fading' : ''}`}
+                  onClick={handleStart}
+                >
+                  <div className="start-title">PokeWalk</div>
+                  <img className="start-char" src={charFrontUrl} alt="" />
+                  <div className="start-prompt">PRESS START</div>
+                </div>
+              )}
             </div>
           </div>
 
