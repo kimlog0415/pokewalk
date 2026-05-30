@@ -8,19 +8,21 @@ import sfxDupSrc           from '../assets/audio/sfx_duplicate.ogg';
 import sfxBattlePendingSrc from '../assets/audio/sfx_battlePending.ogg';
 
 // 미리 로드 — cloneNode()로 빠른 연속 재생도 대응
+// [src, volume] — volume 생략 시 1.0
 const _sounds = Object.fromEntries(
   [
-    ['click',          sfxClickSrc],
-    ['encounter',      sfxEncounterSrc],
-    ['win',            sfxWinSrc],
-    ['lose',           sfxLoseSrc],
-    ['catch',          sfxCatchSrc],
-    ['flee',           sfxFleeSrc],
-    ['duplicate',      sfxDupSrc],
-    ['battlePending',  sfxBattlePendingSrc],
-  ].map(([key, src]) => {
+    ['click',         sfxClickSrc],
+    ['encounter',     sfxEncounterSrc],
+    ['win',           sfxWinSrc],
+    ['lose',          sfxLoseSrc],
+    ['catch',         sfxCatchSrc],
+    ['flee',          sfxFleeSrc],
+    ['duplicate',     sfxDupSrc],
+    ['battlePending', sfxBattlePendingSrc, 0.4],
+  ].map(([key, src, volume = 1.0]) => {
     const a = new Audio(src);
     a.preload = 'auto';
+    a.volume = volume;
     return [key, a];
   })
 );
