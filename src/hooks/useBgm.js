@@ -4,45 +4,54 @@ import bgmTravel from '../assets/audio/bgm_travel.mp3';
 import bgmBattle from '../assets/audio/bgm_battle.mp3';
 import bgmCaught from '../assets/audio/bgm_caught.mp3';
 
+// 모듈 로드 시 Audio 객체 생성 + preload=auto
+// → 게임 시작 전에 브라우저가 파일을 미리 다운로드해두므로 딜레이 없음
+const TRACKS = Object.fromEntries(
+  [['home', bgmHome], ['travel', bgmTravel], ['battle', bgmBattle], ['caught', bgmCaught]]
+    .map(([key, src]) => {
+      const a = new Audio(src);
+      a.loop    = true;
+      a.volume  = 0.4;
+      a.preload = 'auto';
+      return [key, a];
+    })
+);
+
 const SCENE_BGM = {
-  home:      bgmHome,
-  travel:    bgmTravel,
-  fork:      bgmTravel,
-  encounter: bgmBattle,
-  battle:    bgmBattle,
-  caught:    bgmCaught,
-  flee:      bgmBattle,
-  duplicate: bgmBattle,
+  home:      TRACKS.home,
+  travel:    TRACKS.travel,
+  fork:      TRACKS.travel,
+  encounter: TRACKS.battle,
+  battle:    TRACKS.battle,
+  caught:    TRACKS.caught,
+  flee:      TRACKS.battle,
+  duplicate: TRACKS.battle,
 };
 
 export function useBgm(scene) {
-  const audioRef = useRef(null);
-  const srcRef   = useRef(null);
+  const currentRef = useRef(null);
 
-  // 씬 바뀔 때 BGM 교체 (같은 트랙이면 계속 재생)
   useEffect(() => {
-    const src = SCENE_BGM[scene] ?? null;
-    if (src === srcRef.current) return;
-    srcRef.current = src;
+    const next = SCENE_BGM[scene] ?? null;
+    if (next === currentRef.current) return; // 같은 트랙 → 계속 재생
 
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
+    if (currentRef.current) {
+      currentRef.current.pause();
+      currentRef.current.currentTime = 0;
     }
-    if (!src) return;
 
-    const audio = new Audio(src);
-    audio.loop   = true;
-    audio.volume = 0.4;
-    audioRef.current = audio;
-    audio.play().catch(() => {}); // autoplay 차단 시 무시
+    currentRef.current = next;
+    if (next) {
+      next.currentTime = 0;
+      next.play().catch(() => {});
+    }
   }, [scene]);
 
-  // 첫 pointerdown 시 재시도 — autoplay 정책으로 묵음 상태인 경우 복구
+  // 첫 pointerdown 시 재시도 (autoplay 차단 복구)
   useEffect(() => {
     const resume = () => {
-      if (audioRef.current?.paused) {
-        audioRef.current.play().catch(() => {});
+      if (currentRef.current?.paused) {
+        currentRef.current.play().catch(() => {});
       }
       document.removeEventListener('pointerdown', resume);
     };
@@ -50,6 +59,5 @@ export function useBgm(scene) {
     return () => document.removeEventListener('pointerdown', resume);
   }, []);
 
-  // 언마운트 시 정지
-  useEffect(() => () => { audioRef.current?.pause(); }, []);
+  useEffect(() => () => { currentRef.current?.pause(); }, []);
 }
