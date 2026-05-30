@@ -106,6 +106,7 @@ export default function App() {
       setForkPhase('walking');
       setState(s => ({ ...s, path: newPath }));
     } else {
+      setForkPhase('walking'); // 버튼 즉시 숨김
       withFade(() => go('encounter', { path: newPath, currentHabitat: getHabitat(newPath) }));
     }
   }
