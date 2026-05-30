@@ -10,8 +10,9 @@ export default function DuplicateScene({ pokemon, habitat, onDone }) {
   const t = T[lang];
   const name = pokemon?.names?.[lang] ?? pokemon?.name;
 
+  useEffect(() => { playDuplicate(); }, []);
+
   useEffect(() => {
-    playDuplicate();
     const timer = setTimeout(onDone, 5000);
     return () => clearTimeout(timer);
   }, [onDone]);

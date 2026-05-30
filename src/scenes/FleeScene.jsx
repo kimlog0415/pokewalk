@@ -7,8 +7,9 @@ import './FleeScene.css';
 export default function FleeScene({ habitat, onDone }) {
   const t = T[useLang()];
 
+  useEffect(() => { playFlee(); }, []);
+
   useEffect(() => {
-    playFlee();
     const timer = setTimeout(onDone, 5000);
     return () => clearTimeout(timer);
   }, [onDone]);
