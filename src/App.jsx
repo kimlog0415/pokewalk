@@ -218,7 +218,7 @@ export default function App() {
 
           <div className="start-select">
             <button className="btn-small">SELECT</button>
-            <button className="btn-small" onClick={!started ? handleStart : undefined}>START</button>
+            <button className={`btn-small${!started ? ' btn-small-active' : ''}`} onClick={!started ? handleStart : undefined}>START</button>
           </div>
         </div>
       </div>

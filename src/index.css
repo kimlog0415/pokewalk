@@ -304,6 +304,19 @@ body {
   font-size: 7px;
   color: #444;
   letter-spacing: 1px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.btn-small.btn-small-active {
+  background: #cc3333;
+  color: #fff;
+  box-shadow: 0 2px 0 #881111, 0 0 6px rgba(255, 80, 80, 0.6);
+  animation: startBtnPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes startBtnPulse {
+  0%, 100% { box-shadow: 0 2px 0 #881111, 0 0 4px rgba(255, 80, 80, 0.4); }
+  50%       { box-shadow: 0 2px 0 #881111, 0 0 10px rgba(255, 80, 80, 0.9); }
 }
 
 /* ---------- Start overlay ---------- */
