@@ -46,9 +46,9 @@
 - fork: grassland 2s 스크롤 → bg_fork.png + 2s walk-in → 정지 + 갈림길 대화문 (ForkScene 내부 서브페이즈)
 - flee/duplicate: 해당 서식지 배경 + 배틀 위치(left:15%)에서 좌측 퇴장 — `scenes/habitats.css` 공유
 - duplicate: 중복 포켓몬 흑백 + 서서히 fade-out
-- battle: 선택 즉시 버튼 숨김(battlePending 1s) → reveal 카드 (나 vs 상대 손 이모지 + 결과 색상)
+- battle: 선택 즉시 버튼 숨김(battlePending 1s) → reveal 카드 (나 vs 상대 손 이모지 + 결과 색상), 비기면 `round+1` 표시
 - caught: 반짝임 효과
-- 화면 전환: `withFade()` 검은 오버레이 250ms 암전 (home↔travel, fork→encounter, 귀환 전환)
+- 화면 전환: `withFade()` 더블RAF + 250ms 암전 + 150ms hold → 페이드아웃 (Edge/모바일 paint 타이밍 대응)
 
 **home 씬 (bg_home.png)**
 - `char_front.png` (단일 프레임) + `char_walk/char_walk_back` 3종 스프라이트
@@ -65,7 +65,7 @@
 - 앱 로드 시 검은 오버레이 표시 (타이틀 + char_front + PRESS START 깜빡임)
 - START 버튼(빨간 glow pulse 활성) 또는 오버레이 클릭 → 0.4s 페이드아웃 + BGM 시작
 - 오버레이 중 home question 타이머 억제 (`started` 플래그)
-- 브라우저 autoplay 정책 대응: 첫 pointerdown 시 BGM 재시도
+- 브라우저 autoplay 정책 대응: 첫 `click` 시 모든 트랙 unlock (iOS/Android 대응, pointerdown은 모바일에서 미인정)
 
 **BGM (`hooks/useBgm.js`)**
 - OGG 포맷 (무음 프레임 없어 루프 끊김 없음), 모듈 로드 시 preload=auto
@@ -90,6 +90,7 @@
 
 **기타**
 - 게임기 프레임 UI, A/B 버튼은 회색(장식용), 실제 조작 버튼 강조
+- 서식지 배경 7종 모두 앱 로드 시 `new Image()` preload (App.jsx 모듈 레벨, encounter 첫 진입 시 빈 화면 방지)
 
 ### 에셋 현황
 - 배경: bg_grassland/mountain/forest/urban/water_edge/sea/cave/fork/home (전부 3168×1344)
