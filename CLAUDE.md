@@ -22,7 +22,7 @@
 
 ---
 
-## 현재 구현 현황 (2026-05-30 기준)
+## 현재 구현 현황 (2026-05-31 기준)
 
 ### 완료된 것
 
@@ -43,19 +43,43 @@
 - 배경 스크롤 (우→좌, 0~-260px 범위, 이미지 끊김 방지)
 - travel/fork: 배경 시작 위치 랜덤 (음수 animation-delay, 루프 점프 방지 위해 딜레이 상한 제한)
 - encounter: 캐릭터 왼쪽에서 걸어들어옴(anim-walk-in), 배경 고정, 포켓몬 drop-shadow 글로우
-- fork: 걷기(grassland 스크롤) → 도착(bg_fork.png 고정, 이정표)
-- flee/duplicate: 캐릭터 왼쪽으로 걸어나감(anim-walk-out)
+- fork: grassland 2s 스크롤 → bg_fork.png + 2s walk-in → 정지 + 갈림길 대화문 (ForkScene 내부 서브페이즈)
+- flee/duplicate: 해당 서식지 배경 + 배틀 위치(left:15%)에서 좌측 퇴장 — `scenes/habitats.css` 공유
 - duplicate: 중복 포켓몬 흑백 + 서서히 fade-out
 - battle: 가위바위보 결과 reveal 카드 (나 vs 상대 손 이모지 + 결과 색상)
 - caught: 반짝임 효과
+- 화면 전환: `withFade()` 검은 오버레이 250ms 암전 (home↔travel, fork→encounter, 귀환 전환)
 
 **home 씬 (bg_home.png)**
-- `char_front.png` (단일 프레임) 포함, 3종 캐릭터 스프라이트 운용
-- 캐릭터 bg_home.png 원본 좌표 277~1449 범위 (화면 59~307px) 를 왔다갔다 걷기
+- `char_front.png` (단일 프레임) + `char_walk/char_walk_back` 3종 스프라이트
+- RAF 기반 80px/s 좌우 이동 (원본 좌표 277~1449, 화면 59~307px), 방향 전환 시만 React 리렌더
 - 5초마다 "나갈까? 말까?" 질문 → `homePhase` (App.jsx): `'walking'|'question'|'exit'`
-- question 시 캐릭터 정면(`char_front.png`) 정지, HomeButtons(choice-buttons 영역)에 3초 타이머
-- 3초 초과 자동선택 → '있을래' (stay). 나갈래 선택 시 우측 퇴장(`anim-walk-out-right`) 1.5s → travel
-- 도감은 우상단 소형 버튼 클릭 → 화면 내 오버레이 (5열 그리드, 슬롯 클릭 → 상세 카드 모달)
+- question 시 정면 정지, HomeButtons 3초 타이머, 초과 시 랜덤 자동선택
+- 나갈래 선택 → 우측 퇴장(`anim-walk-out-right`) 1.5s → travel
+- 도감 오버레이 열려있으면 question 타이머 중단, 열 때 question 상태면 자동 dismiss
+- 도감: 우상단 소형 버튼 → 화면 내 오버레이 (5열 그리드 + 포켓몬 상세 카드 모달)
+
+**Press-Start 오버레이**
+- 앱 로드 시 검은 오버레이 표시 (타이틀 + char_front + PRESS START 깜빡임)
+- START 버튼(빨간 glow pulse 활성) 또는 오버레이 클릭 → 0.4s 페이드아웃 + BGM 시작
+- 오버레이 중 home question 타이머 억제 (`started` 플래그)
+- 브라우저 autoplay 정책 대응: 첫 pointerdown 시 BGM 재시도
+
+**BGM (`hooks/useBgm.js`)**
+- OGG 포맷 (무음 프레임 없어 루프 끊김 없음), 모듈 로드 시 preload=auto
+- 씬 매핑: home→bgm_home, travel/fork→bgm_travel, encounter~duplicate→bgm_battle, caught→bgm_caught
+- 같은 트랙이면 씬 전환해도 계속 재생 (battleBGM이 encounter부터 flee/duplicate까지 유지)
+
+**SFX (`utils/sfx.js`)**
+- OGG 포맷, 모듈 로드 시 preload=auto, cloneNode()로 연속 재생 대응
+- sfx_click: 선택 버튼 전체, 언어팩, 도감 버튼/슬롯/닫기, START 버튼, 오버레이
+- sfx_encounter: 포켓몬 등장 시 (reveal phase)
+- sfx_win/lose: RPS 결과 확정 즉시
+- sfx_catch/flee/duplicate: 해당 씬 마운트 시 1회 (useRef 플래그로 StrictMode 이중 방지)
+
+**CSS 공유 상수 (`scenes/habitats.css`)**
+- `--field-pokemon-size: 112px` / `--field-pokemon-right: 8%` / `--field-pokemon-bottom: 55px`
+- encounter/duplicate `.field-pokemon-img` 클래스로 통일 (한 곳만 수정하면 반영)
 
 **스프라이트 방향**
 - `data/faceRight.js` — 오른쪽 보는 포켓몬 ID는 scaleX(-1)로 좌우반전
@@ -66,17 +90,17 @@
 - dev 단축: URL `?scene=battle|encounter|fork|...` 로 특정 씬 바로 진입
 
 ### 에셋 현황
-- 배경: bg_grassland/mountain/forest/urban/water_edge/sea/cave/fork (전부 3168×1344)
-- 캐릭터: char_walk, char_walk_back (2048×701, 3프레임)
+- 배경: bg_grassland/mountain/forest/urban/water_edge/sea/cave/fork/home (전부 3168×1344)
+- 캐릭터: char_walk, char_walk_back (2048×701, 3프레임), char_front (단일)
 - 포켓몬: PokeAPI (small + official-artwork)
+- BGM: bgm_home/travel/battle/caught (.ogg)
+- SFX: sfx_click/encounter/win/lose/catch/flee/duplicate (.ogg) ※ sfx_draw 미구현
 
 ### 남은 작업 (TODO)
-- [ ] **BGM/SFX 추가** — 아직 사운드 전무. `bgm_home/travel/battle/caught`, `sfx_*` 8종 필요
-- [ ] **화면 전환 트랜지션** — 씬 간 페이드 인/아웃 (현재 즉시 전환)
-- [ ] **GitHub Pages 배포 설정** — `vite.config.js`에 `base: '/pokewalk/'` 추가 + 배포 워크플로우
+- [ ] **GitHub Pages 배포 설정** — `vite.config.js`에 `base: '/pokewalk/'` 추가 + `.github/workflows/deploy.yml`
 - [ ] **도감 완성도 표시/리워드** — 151마리 수집 진행률 강조, 완성 시 연출
 - [ ] **모바일 반응형 점검** — 480px 이하 레이아웃 실기기 확인
-- [ ] (검토) 가위바위보 손 이모지 → 픽셀아트 톤에 맞는지, 텍스트로 대체 여부
+- [ ] **sfx_draw** — 가위바위보 비겼을 때 효과음 없음
 
 ---
 
@@ -267,36 +291,35 @@ max(13) - min(7.5) = 5.5로 난이도 격차를 의도적으로 좁게 설계.
 
 ### BGM (배경음악)
 
-- 형식: MP3 + OGG 각각 준비 (브라우저 호환성)
+- 형식: OGG (루프 끊김 없음)
 - 저작권: 포켓몬 원곡 사용 불가, 직접 제작 또는 CC0 라이선스 사용
 - 구성:
-  - `bgm_home` — 홈/도감 화면
-  - `bgm_travel` — 이동/탐험 중
-  - `bgm_battle` — 가위바위보
+  - `bgm_home` — 홈 화면
+  - `bgm_travel` — 이동/갈림길
+  - `bgm_battle` — encounter~battle~flee/duplicate
   - `bgm_caught` — 포획 성공
 
 ### SFX (효과음)
 
-- 형식: MP3 + OGG 각각 준비
+- 형식: OGG
 - 저작권: 직접 제작 또는 CC0 라이선스 사용
-- 구성:
-  - `sfx_select` — 갈림길 선택
+- 구성 (구현 완료):
+  - `sfx_click` — 모든 조작 버튼
   - `sfx_encounter` — 포켓몬 등장
-  - `sfx_win` — 가위바위보 승리
-  - `sfx_lose` — 가위바위보 패배
-  - `sfx_draw` — 가위바위보 비김
+  - `sfx_win` / `sfx_lose` — 가위바위보 결과
   - `sfx_catch` — 포획 성공
   - `sfx_flee` — 도망
   - `sfx_duplicate` — 이미 잡은 포켓몬
+- 미구현: `sfx_draw` — 가위바위보 비김
 
 ### FX (시각 효과)
 
 - CSS 애니메이션으로 구현 (별도 에셋 불필요)
 - 구성:
-  - 화면 페이드 인/아웃 트랜지션
+  - 씬 전환 페이드 인/아웃 (`withFade`, `.screen-fade` 오버레이)
+  - Press-Start 오버레이 (앱 최초 진입 시)
   - 포획 성공 시 반짝임 효과
-  - 갈림길 선택 시 버튼 하이라이트
-  - 가위바위보 선택 시 흔들림 효과
+  - 갈림길/가위바위보 선택 시 버튼 하이라이트
 
 ---
 
@@ -313,15 +336,3 @@ max(13) - min(7.5) = 5.5로 난이도 격차를 의도적으로 좁게 설계.
 | 포획 성공 표시                   | 3초  |
 | 도망/뒤돌아 걷기                 | 3초  |
 
----
-
-## 개발 우선순위
-
-1. 화면 전환 구조 (scene 상태 기반)
-2. 갈림길 트리 + 서식지 매핑 데이터
-3. PokeAPI 연동 (서식지별 포켓몬 목록 fetch)
-4. 가위바위보 로직
-5. localStorage 도감 저장/불러오기
-6. 타이머 자동 선택 로직
-7. 애니메이션 (스프라이트, 배경 스크롤, 트랜지션)
-8. 홈 도감 화면 UI
