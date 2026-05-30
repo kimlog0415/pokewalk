@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
+import { TIMINGS } from '../utils/constants';
 import './TravelScene.css';
+
+// bg-scroll animation-delay 상한 (s) — 3s 걷기 안에 루프 점프 방지
+const BG_DELAY_MAX = 7;
 
 export default function TravelScene({ onDone }) {
   const t = T[useLang()];
-  // bgScroll 14s 중 랜덤 시점에서 시작 → 배경 위치가 매번 달라짐
-  // 최대 딜레이 -7s: travel 3초 안에 루프 점프 없음 (3/10*260 + 7/10*260 = 260)
-  const [bgDelay] = useState(() => `-${(Math.random() * 7).toFixed(2)}s`);
+  // bgScroll 중 랜덤 시점에서 시작 → 배경 위치가 매번 달라짐
+  const [bgDelay] = useState(() => `-${(Math.random() * BG_DELAY_MAX).toFixed(2)}s`);
 
   useEffect(() => {
-    const timer = setTimeout(onDone, 3000);
+    const timer = setTimeout(onDone, TIMINGS.TRAVEL);
     return () => clearTimeout(timer);
   }, [onDone]);
 

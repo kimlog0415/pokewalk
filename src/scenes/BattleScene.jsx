@@ -1,14 +1,14 @@
 import { useLang } from "../contexts/LangContext";
 import { T } from "../data/translations";
 import { flipStyle } from "../data/faceRight";
+import { RPS_EMOJI } from "../utils/rps";
+import { getPokemonName } from "../utils/pokemon";
 import "./BattleScene.css";
-
-const RPS_EMOJI = { scissors: "✌️", rock: "✊", paper: "🖐️" };
 
 export default function BattleScene({ pokemon, round, reveal }) {
   const lang = useLang();
   const t = T[lang];
-  const name = pokemon?.names?.[lang] ?? pokemon?.name;
+  const name = getPokemonName(pokemon, lang);
 
   const resultText =
     reveal?.result === "win"

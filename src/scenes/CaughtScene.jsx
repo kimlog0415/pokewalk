@@ -1,26 +1,17 @@
-import { useEffect, useRef } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
 import { playCatch } from '../utils/sfx';
+import { getPokemonName } from '../utils/pokemon';
+import { useSceneExit } from '../hooks/useSceneExit';
 import './CaughtScene.css';
 
 export default function CaughtScene({ pokemon, onDone }) {
   const lang = useLang();
   const t = T[lang];
-  const name = pokemon?.names?.[lang] ?? pokemon?.name;
+  const name = getPokemonName(pokemon, lang);
 
-  const sfxPlayed = useRef(false);
-  useEffect(() => {
-    if (sfxPlayed.current) return;
-    sfxPlayed.current = true;
-    playCatch();
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(onDone, 5000);
-    return () => clearTimeout(timer);
-  }, [onDone]);
+  useSceneExit(playCatch, onDone);
 
   return (
     <div className="caught-scene">

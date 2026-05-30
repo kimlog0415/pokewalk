@@ -4,10 +4,9 @@ import { useLang } from "../contexts/LangContext";
 import { T } from "../data/translations";
 import { flipStyle } from "../data/faceRight";
 import { playEncounter } from "../utils/sfx";
+import { getPokemonName } from "../utils/pokemon";
+import { SPRITE_ART, TIMINGS } from "../utils/constants";
 import "./EncounterScene.css";
-
-const SPRITE_ART =
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
 
 export default function EncounterScene({ habitat, onReady }) {
   const lang = useLang();
@@ -42,20 +41,20 @@ export default function EncounterScene({ habitat, onReady }) {
         });
       });
 
-    const timer = setTimeout(() => setPhase("reveal"), 2000);
+    const timer = setTimeout(() => setPhase("reveal"), TIMINGS.WALK_IN);
     return () => clearTimeout(timer);
   }, [habitat]);
 
   useEffect(() => {
     if (phase === "reveal" && pokemon) {
       playEncounter();
-      const timer = setTimeout(() => onReady(pokemon), 2000);
+      const timer = setTimeout(() => onReady(pokemon), TIMINGS.ENCOUNTER_REVEAL);
       return () => clearTimeout(timer);
     }
   }, [phase, pokemon, onReady]);
 
   const walkText = t.habitat[habitat] ?? t.exploring;
-  const name = pokemon?.names[lang] ?? "???";
+  const name = getPokemonName(pokemon, lang) || "???";
 
   return (
     <div className="encounter-scene">

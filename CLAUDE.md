@@ -80,6 +80,12 @@
 - sfx_battlePending: RPS 선택 직후 (1s 대기 중)
 - sfx_catch/flee/duplicate: 해당 씬 마운트 시 1회 (useRef 플래그로 StrictMode 이중 방지)
 
+**공유 유틸/상수 (`utils/`, `hooks/`)**
+- `utils/constants.js` — `TIMINGS`(씬 타이밍 ms 전체), `AUTO_SELECT_SECONDS`, `DEFAULT_HABITAT`, `SPRITE_SMALL/ART` URL
+- `utils/rps.js` — `RPS_KEYS`, `RPS_EMOJI`, `rpsResult()`, `randomRps()`
+- `utils/pokemon.js` — `getPokemonName(pokemon, lang)` (names → nameKo → name fallback 통일)
+- `hooks/useSceneExit.js` — caught/flee/duplicate 공통 (SFX 1회 + SCENE_EXIT 타이머 → onDone)
+
 **CSS 공유 상수 (`scenes/habitats.css`)**
 - `--field-pokemon-size: 112px` / `--field-pokemon-right: 8%` / `--field-pokemon-bottom: 55px`
 - encounter/duplicate `.field-pokemon-img` 클래스로 통일 (한 곳만 수정하면 반영)

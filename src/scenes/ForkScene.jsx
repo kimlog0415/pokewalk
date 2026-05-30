@@ -1,11 +1,15 @@
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
+import { TIMINGS } from '../utils/constants';
 import './ForkScene.css';
+
+// bg-scroll animation-delay 상한 (s) — 2s 걷기 안에 루프 점프 방지
+const BG_DELAY_MAX = 8;
 
 export default function ForkScene({ step, phase, onArrived }) {
   const t = T[useLang()];
-  const bgDelay = useMemo(() => `-${(Math.random() * 8).toFixed(2)}s`, [step]);
+  const bgDelay = useMemo(() => `-${(Math.random() * BG_DELAY_MAX).toFixed(2)}s`, [step]);
 
   // fork bg 표시 여부 / 캐릭터 정지 여부 (ForkScene 내부 서브 페이즈)
   const [showFork, setShowFork] = useState(false);
@@ -15,22 +19,22 @@ export default function ForkScene({ step, phase, onArrived }) {
   const onArrivedRef = useRef(onArrived);
   useEffect(() => { onArrivedRef.current = onArrived; }, [onArrived]);
 
-  // walking phase: 2s grassland 스크롤 → fork bg 전환
+  // walking phase: grassland 스크롤 → fork bg 전환
   useEffect(() => {
     if (phase !== 'walking') return;
     setShowFork(false);
     setStopped(false);
-    const t = setTimeout(() => setShowFork(true), 2000);
+    const t = setTimeout(() => setShowFork(true), TIMINGS.WALK_IN);
     return () => clearTimeout(t);
   }, [phase, step]);
 
-  // fork bg 등장 → 2s walk-in → 정지 + 버튼 활성화
+  // fork bg 등장 → walk-in → 정지 + 버튼 활성화
   useEffect(() => {
     if (!showFork) return;
     const t = setTimeout(() => {
       setStopped(true);
       onArrivedRef.current();
-    }, 2000);
+    }, TIMINGS.WALK_IN);
     return () => clearTimeout(t);
   }, [showFork]);
 

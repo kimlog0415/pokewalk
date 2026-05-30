@@ -1,30 +1,22 @@
-import { useEffect, useRef } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
 import { playDuplicate } from '../utils/sfx';
+import { getPokemonName } from '../utils/pokemon';
+import { useSceneExit } from '../hooks/useSceneExit';
+import { DEFAULT_HABITAT } from '../utils/constants';
 import './DuplicateScene.css';
 
 export default function DuplicateScene({ pokemon, habitat, onDone }) {
   const lang = useLang();
   const t = T[lang];
-  const name = pokemon?.names?.[lang] ?? pokemon?.name;
+  const name = getPokemonName(pokemon, lang);
 
-  const sfxPlayed = useRef(false);
-  useEffect(() => {
-    if (sfxPlayed.current) return;
-    sfxPlayed.current = true;
-    playDuplicate();
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(onDone, 5000);
-    return () => clearTimeout(timer);
-  }, [onDone]);
+  useSceneExit(playDuplicate, onDone);
 
   return (
     <div className="duplicate-scene">
-      <div className={`duplicate-bg habitat-${habitat ?? 'grassland'}`} />
+      <div className={`duplicate-bg habitat-${habitat ?? DEFAULT_HABITAT}`} />
       <div className="char char-walk-back anim-walk-out duplicate-char" />
       {pokemon && (
         <div className="duplicate-pokemon faded">

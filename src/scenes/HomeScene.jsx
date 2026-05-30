@@ -4,11 +4,11 @@ import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
 import { playClick } from '../utils/sfx';
+import { getPokemonName } from '../utils/pokemon';
+import { SPRITE_SMALL, SPRITE_ART, TIMINGS } from '../utils/constants';
 import './HomeScene.css';
 
 const TOTAL = 151;
-const SPRITE_SMALL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-const SPRITE_ART   = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
 
 // bg_home.png (3168×1344), scale = 285/1344 ≈ 0.212
 // 원본 좌표 277px → ~59px, 1449px → ~307px (화면 기준)
@@ -58,7 +58,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone, 
     };
 
     rafRef.current = requestAnimationFrame(tick);
-    const promptTimer = setTimeout(onQuestion, 5000);
+    const promptTimer = setTimeout(onQuestion, TIMINGS.HOME_QUESTION);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
@@ -69,7 +69,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone, 
   // 퇴장 애니메이션 후 travel로 전환
   useEffect(() => {
     if (phase !== 'exit') return;
-    const timer = setTimeout(onDone, 1500);
+    const timer = setTimeout(onDone, TIMINGS.HOME_EXIT);
     return () => clearTimeout(timer);
   }, [phase, onDone]);
 
@@ -119,7 +119,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone, 
             {Array.from({ length: TOTAL }, (_, i) => i + 1).map(id => {
               const entry = pokedex.find(p => p.id === id);
               const caught = !!entry;
-              const name = entry?.names?.[lang] ?? entry?.nameKo ?? '';
+              const name = getPokemonName(entry, lang);
               return (
                 <div
                   key={id}
@@ -148,7 +148,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone, 
 
 function PokemonCard({ entry, lang, onClose }) {
   const [flavor, setFlavor] = useState(null);
-  const name = entry?.names?.[lang] ?? entry?.nameKo ?? '';
+  const name = getPokemonName(entry, lang);
 
   useEffect(() => {
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${entry.id}`)

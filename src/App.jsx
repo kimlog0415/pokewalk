@@ -17,6 +17,8 @@ import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { useBgm } from './hooks/useBgm';
 import { playClick, playWin, playLose, playBattlePending } from './utils/sfx';
+import { RPS_KEYS, rpsResult, randomRps } from './utils/rps';
+import { TIMINGS, AUTO_SELECT_SECONDS } from './utils/constants';
 import { getHabitat } from './data/habitats';
 import { LangContext, useLang } from './contexts/LangContext';
 import { T } from './data/translations';
@@ -30,21 +32,6 @@ import CaughtScene from './scenes/CaughtScene';
 import FleeScene from './scenes/FleeScene';
 import DuplicateScene from './scenes/DuplicateScene';
 
-const RPS_KEYS = ['scissors', 'rock', 'paper'];
-
-function rpsResult(player, cpu) {
-  if (player === cpu) return 'draw';
-  if (
-    (player === 'scissors' && cpu === 'paper') ||
-    (player === 'rock'    && cpu === 'scissors') ||
-    (player === 'paper'   && cpu === 'rock')
-  ) return 'win';
-  return 'lose';
-}
-
-function randomRps() {
-  return RPS_KEYS[Math.floor(Math.random() * 3)];
-}
 
 function getInitialState() {
   return { scene: 'home', path: [], currentHabitat: null, currentPokemon: null, battleRound: 0 };
@@ -87,14 +74,14 @@ export default function App() {
         setTimeout(() => {
           fadingRef.current = false;
           setFading(false);
-        }, 150);
-      }, 250);
+        }, TIMINGS.FADE_HOLD);
+      }, TIMINGS.FADE_DURATION);
     }));
   }, []);
 
   function handleStart() {
     setStartFading(true);
-    setTimeout(() => setStarted(true), 400);
+    setTimeout(() => setStarted(true), TIMINGS.START_FADE);
   }
 
   const onHomeQuestion = useCallback(() => setHomePhase('question'), []);
@@ -153,8 +140,8 @@ export default function App() {
           setBattlePending(false);
           go('battle', { battleRound: state.battleRound + 1 });
         }
-      }, 1500);
-    }, 1000);
+      }, TIMINGS.BATTLE_REVEAL);
+    }, TIMINGS.BATTLE_PENDING);
   }
 
   useEffect(() => () => clearTimeout(revealTimerRef.current), []);
@@ -242,11 +229,11 @@ function HomeButtons({ onGoOut, onStay }) {
 
   useEffect(() => () => clearTimeout(pendingRef.current), []);
 
-  // 3초 초과 시 랜덤 선택
-  const ratio = useAutoTimer(3, () => {
+  // 초과 시 랜덤 선택
+  const ratio = useAutoTimer(AUTO_SELECT_SECONDS, () => {
     const choice = Math.random() < 0.5 ? 'out' : 'stay';
     setFlash(choice);
-    pendingRef.current = setTimeout(choice === 'out' ? onGoOut : onStay, 500);
+    pendingRef.current = setTimeout(choice === 'out' ? onGoOut : onStay, TIMINGS.FLASH_DELAY);
   });
 
   return (
@@ -277,10 +264,10 @@ function ForkButtons({ onChoice }) {
 
   useEffect(() => () => clearTimeout(pendingRef.current), []);
 
-  const ratio = useAutoTimer(3, () => {
+  const ratio = useAutoTimer(AUTO_SELECT_SECONDS, () => {
     const dir = Math.random() < 0.5 ? 'left' : 'right';
     setFlash(dir);
-    pendingRef.current = setTimeout(() => onChoice(dir), 500);
+    pendingRef.current = setTimeout(() => onChoice(dir), TIMINGS.FLASH_DELAY);
   });
 
   return (
@@ -302,10 +289,10 @@ function BattleButtons({ onPlay, round }) {
 
   useEffect(() => () => clearTimeout(pendingRef.current), []);
 
-  const ratio = useAutoTimer(3, () => {
+  const ratio = useAutoTimer(AUTO_SELECT_SECONDS, () => {
     const player = randomRps();
     setFlash(player);
-    pendingRef.current = setTimeout(() => onPlay(player, randomRps()), 500);
+    pendingRef.current = setTimeout(() => onPlay(player, randomRps()), TIMINGS.FLASH_DELAY);
   }, true, round);
 
   function choose(key) { playClick(); onPlay(key, randomRps()); }
