@@ -18,7 +18,7 @@ const _sounds = Object.fromEntries(
     ['catch',         sfxCatchSrc],
     ['flee',          sfxFleeSrc],
     ['duplicate',     sfxDupSrc],
-    ['battlePending', sfxBattlePendingSrc, 0.4],
+    ['battlePending', sfxBattlePendingSrc],
   ].map(([key, src, volume = 1.0]) => {
     const a = new Audio(src);
     a.preload = 'auto';
