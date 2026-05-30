@@ -1,20 +1,24 @@
+import { useLang } from '../contexts/LangContext';
+import { T } from '../data/translations';
 import './BattleScene.css';
 
 export default function BattleScene({ pokemon, round }) {
+  const lang = useLang();
+  const t = T[lang];
+  const name = pokemon?.names?.[lang] ?? pokemon?.name;
+
   return (
     <div className="battle-scene">
       <div className="battle-bg" />
       <div className="char char-walk battle-char" />
       {pokemon && (
         <div className="battle-pokemon">
-          <img src={pokemon.sprite} alt={pokemon.name} width={112} height={112} />
-          <div className="battle-pokemon-name">{pokemon.name}</div>
+          <img src={pokemon.sprite} alt={name} width={200} height={200} />
+          <div className="battle-pokemon-name">{name}</div>
         </div>
       )}
       <div className="battle-dialog">
-        {round === 0
-          ? '가위바위보로 승부!'
-          : `${round}번째 시도... 다시!`}
+        {round === 0 ? t.rps : t.retry(round)}
       </div>
     </div>
   );

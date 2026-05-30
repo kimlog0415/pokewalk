@@ -1,4 +1,4 @@
-@import './sprites.css';
+@import "./sprites.css";
 
 .battle-scene {
   width: 100%;
@@ -25,7 +25,9 @@
 }
 
 .battle-pokemon {
-  position: relative;
+  position: absolute;
+  top: 120px;
+  right: 50px;
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -36,11 +38,11 @@
 
 .battle-pokemon img {
   image-rendering: pixelated;
-  filter: drop-shadow(0 0 8px rgba(255,200,0,0.5));
+  filter: drop-shadow(0 0 8px rgba(255, 200, 0, 0.5));
 }
 
 .battle-pokemon-name {
-  font-size: 9px;
+  font-size: 12px;
   color: #ffcc00;
   letter-spacing: 1px;
 }
@@ -48,11 +50,12 @@
 .battle-dialog {
   position: absolute;
   bottom: 0;
-  left: 0; right: 0;
-  background: rgba(0,0,0,0.8);
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
   border-top: 2px solid #fff;
   padding: 6px 8px;
-  font-size: 9px;
+  font-size: 12px;
   color: #fff;
   z-index: 2;
 }

@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react';
 import { pickPokemon } from '../data/habitats';
+import { useLang } from '../contexts/LangContext';
+import { T } from '../data/translations';
 import './EncounterScene.css';
 
-const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
-
-const HABITAT_TEXT = {
-  grassland:  '풀밭을 헤치며...',
-  mountain:   '산길을 오르며...',
-  forest:     '숲속을 헤치며...',
-  urban:      '도시를 걷다...',
-  water_edge: '물가를 걷다...',
-  sea:        '파도를 헤치며...',
-  cave:       '동굴 속을 걷다...',
-};
+const SPRITE_ART = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
 
 export default function EncounterScene({ habitat, onReady }) {
+  const lang = useLang();
+  const t = T[lang];
   const [pokemon, setPokemon] = useState(null);
   const [phase, setPhase] = useState('walk');
 
@@ -26,30 +20,35 @@ export default function EncounterScene({ habitat, onReady }) {
       fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r => r.json()),
     ])
       .then(([pokeData, speciesData]) => {
-        const nameKo =
-          speciesData.names.find(n => n.language.name === 'ko')?.name ?? pokeData.name;
+        const find = (l) =>
+          speciesData.names.find(n => n.language.name === l)?.name ?? pokeData.name;
         setPokemon({
           id: pokeData.id,
-          name: nameKo,
-          sprite: `${SPRITE_BASE}${pokeData.id}.png`,
+          names: { ko: find('ko'), ja: find('ja'), en: find('en') },
+          sprite: `${SPRITE_ART}${pokeData.id}.png`,
         });
       })
       .catch(() => {
-        setPokemon({ id, name: `#${id}`, sprite: `${SPRITE_BASE}${id}.png` });
+        setPokemon({
+          id,
+          names: { ko: `#${id}`, ja: `#${id}`, en: `#${id}` },
+          sprite: `${SPRITE_ART}${id}.png`,
+        });
       });
 
-    const t = setTimeout(() => setPhase('reveal'), 2000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setPhase('reveal'), 2000);
+    return () => clearTimeout(timer);
   }, [habitat]);
 
   useEffect(() => {
     if (phase === 'reveal' && pokemon) {
-      const t = setTimeout(() => onReady(pokemon), 800);
-      return () => clearTimeout(t);
+      const timer = setTimeout(() => onReady(pokemon), 800);
+      return () => clearTimeout(timer);
     }
   }, [phase, pokemon, onReady]);
 
-  const walkText = HABITAT_TEXT[habitat] ?? '풀숲을 헤치며...';
+  const walkText = t.habitat[habitat] ?? t.exploring;
+  const name = pokemon?.names[lang] ?? '???';
 
   return (
     <div className="encounter-scene">
@@ -57,13 +56,11 @@ export default function EncounterScene({ habitat, onReady }) {
       <div className={`char char-walk encounter-char${phase === 'walk' ? ' anim-walk-in' : ''}`} />
       {phase === 'reveal' && pokemon && (
         <div className="encounter-pokemon appear-anim">
-          <img src={pokemon.sprite} alt={pokemon.name} width={96} height={96} />
+          <img src={pokemon.sprite} alt={name} width={96} height={96} />
         </div>
       )}
       <div className="encounter-dialog">
-        {phase === 'walk'
-          ? walkText
-          : `야생 ${pokemon?.name ?? '???'}이(가) 나타났다!`}
+        {phase === 'walk' ? walkText : t.appeared(name)}
       </div>
     </div>
   );

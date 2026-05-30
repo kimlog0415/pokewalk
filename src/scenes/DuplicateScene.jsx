@@ -1,10 +1,16 @@
 import { useEffect } from 'react';
+import { useLang } from '../contexts/LangContext';
+import { T } from '../data/translations';
 import './DuplicateScene.css';
 
 export default function DuplicateScene({ pokemon, onDone }) {
+  const lang = useLang();
+  const t = T[lang];
+  const name = pokemon?.names?.[lang] ?? pokemon?.name;
+
   useEffect(() => {
-    const t = setTimeout(onDone, 5000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(onDone, 5000);
+    return () => clearTimeout(timer);
   }, [onDone]);
 
   return (
@@ -13,10 +19,10 @@ export default function DuplicateScene({ pokemon, onDone }) {
       <div className="char char-walk-back anim-walk-out duplicate-char" />
       {pokemon && (
         <div className="duplicate-pokemon faded">
-          <img src={pokemon.sprite} alt={pokemon.name} width={64} height={64} />
+          <img src={pokemon.sprite} alt={name} width={64} height={64} />
         </div>
       )}
-      <div className="duplicate-dialog">이미 있는 포켓몬이야!</div>
+      <div className="duplicate-dialog">{t.alreadyHave}</div>
     </div>
   );
 }

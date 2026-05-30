@@ -5,9 +5,14 @@ const KEY = 'pokedex';
 function load() {
   try {
     const data = JSON.parse(localStorage.getItem(KEY)) ?? [];
-    // 구버전 (숫자 배열) 마이그레이션
-    if (data.length > 0 && typeof data[0] === 'number') {
-      return data.map(id => ({ id, nameKo: `#${id}` }));
+    if (data.length === 0) return data;
+    // 구버전 [number] 마이그레이션
+    if (typeof data[0] === 'number') {
+      return data.map(id => ({ id, names: { ko: `#${id}`, ja: `#${id}`, en: `#${id}` } }));
+    }
+    // 중간 버전 { id, nameKo } 마이그레이션
+    if ('nameKo' in data[0]) {
+      return data.map(p => ({ id: p.id, names: { ko: p.nameKo, ja: `#${p.id}`, en: `#${p.id}` } }));
     }
     return data;
   } catch {
@@ -18,33 +23,35 @@ function load() {
 export function usePokedex() {
   const [pokedex, setPokedex] = useState(load);
 
-  // #id 형태의 임시 이름 → PokeAPI에서 한국어 이름 자동 갱신
+  // 이름이 '#id' 형태인 항목 → PokeAPI에서 다국어 이름 자동 갱신
   useEffect(() => {
-    const needsName = pokedex.filter(p => p.nameKo?.startsWith('#'));
-    if (needsName.length === 0) return;
+    const needsRefresh = pokedex.filter(
+      p => !p.names || Object.values(p.names).some(n => n?.startsWith('#'))
+    );
+    if (needsRefresh.length === 0) return;
 
     Promise.all(
-      needsName.map(p =>
+      needsRefresh.map(p =>
         fetch(`https://pokeapi.co/api/v2/pokemon-species/${p.id}`)
           .then(r => r.json())
           .then(data => {
-            const nameKo =
-              data.names.find(n => n.language.name === 'ko')?.name ?? `#${p.id}`;
-            return { id: p.id, nameKo };
+            const find = (lang) =>
+              data.names.find(n => n.language.name === lang)?.name ?? `#${p.id}`;
+            return { id: p.id, names: { ko: find('ko'), ja: find('ja'), en: find('en') } };
           })
-          .catch(() => ({ id: p.id, nameKo: `#${p.id}` }))
+          .catch(() => ({ id: p.id, names: p.names }))
       )
     ).then(refreshed => {
-      const map = Object.fromEntries(refreshed.map(r => [r.id, r.nameKo]));
-      const next = pokedex.map(p => ({ ...p, nameKo: map[p.id] ?? p.nameKo }));
+      const map = Object.fromEntries(refreshed.map(r => [r.id, r.names]));
+      const next = pokedex.map(p => ({ ...p, names: map[p.id] ?? p.names }));
       setPokedex(next);
       localStorage.setItem(KEY, JSON.stringify(next));
     });
   }, []);
 
-  function catchPokemon({ id, nameKo }) {
+  function catchPokemon({ id, names }) {
     if (pokedex.some(p => p.id === id)) return;
-    const next = [...pokedex, { id, nameKo }];
+    const next = [...pokedex, { id, names }];
     setPokedex(next);
     localStorage.setItem(KEY, JSON.stringify(next));
   }

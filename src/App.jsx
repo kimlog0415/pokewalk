@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { getHabitat } from './data/habitats';
+import { LangContext, useLang } from './contexts/LangContext';
+import { T } from './data/translations';
 
 import HomeScene from './scenes/HomeScene';
 import TravelScene from './scenes/TravelScene';
@@ -13,14 +15,13 @@ import FleeScene from './scenes/FleeScene';
 import DuplicateScene from './scenes/DuplicateScene';
 
 const RPS_KEYS = ['scissors', 'rock', 'paper'];
-const RPS_LABELS = ['가위', '바위', '보'];
 
 function rpsResult(player, cpu) {
   if (player === cpu) return 'draw';
   if (
     (player === 'scissors' && cpu === 'paper') ||
-    (player === 'rock' && cpu === 'scissors') ||
-    (player === 'paper' && cpu === 'rock')
+    (player === 'rock'    && cpu === 'scissors') ||
+    (player === 'paper'   && cpu === 'rock')
   ) return 'win';
   return 'lose';
 }
@@ -31,7 +32,7 @@ function randomRps() {
 
 const DEV_POKEMON = {
   id: 25,
-  name: '피카츄',
+  names: { ko: '피카츄', ja: 'ピカチュウ', en: 'Pikachu' },
   sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
 };
 
@@ -51,11 +52,16 @@ function getInitialState() {
   return { ...base, ...(DEV_SCENES[p] ?? { scene: 'home' }) };
 }
 
-export default function App() {
-  const [state, setState] = useState(getInitialState);
-  // fork 내부 단계: 'walking' → 2초 → 'arrived' (버튼 활성)
-  const [forkPhase, setForkPhase] = useState('walking');
+const LANG_PACKS = [
+  { id: 'ko', label: '한국어', color: '#b52a2a' },
+  { id: 'ja', label: '日本語', color: '#1e56a8' },
+  { id: 'en', label: 'English', color: '#a07a00' },
+];
 
+export default function App() {
+  const [lang, setLang] = useState('ko');
+  const [state, setState] = useState(getInitialState);
+  const [forkPhase, setForkPhase] = useState('walking');
   const { pokedex, catchPokemon, isDuplicate } = usePokedex();
 
   const go = useCallback((nextScene, patch = {}) => {
@@ -71,20 +77,17 @@ export default function App() {
     go('fork');
   }
 
-  // ForkScene 내부 walking 끝나면 호출
   function onForkArrived() {
     setForkPhase('arrived');
   }
 
-  // 버튼 선택 or 자동 선택
   function onForkChoice(dir) {
     const newPath = [...state.path, dir];
     if (newPath.length < 4) {
       setForkPhase('walking');
       setState(s => ({ ...s, path: newPath }));
     } else {
-      const habitat = getHabitat(newPath);
-      go('encounter', { path: newPath, currentHabitat: habitat });
+      go('encounter', { path: newPath, currentHabitat: getHabitat(newPath) });
     }
   }
 
@@ -98,7 +101,7 @@ export default function App() {
 
   function onBattleResult(result) {
     if (result === 'win') {
-      catchPokemon({ id: state.currentPokemon.id, nameKo: state.currentPokemon.name });
+      catchPokemon({ id: state.currentPokemon.id, names: state.currentPokemon.names });
       go('caught');
     } else if (result === 'lose') {
       go('flee');
@@ -107,79 +110,68 @@ export default function App() {
     }
   }
 
-  function goHome() {
-    go('home');
-  }
+  function goHome() { go('home'); }
 
   return (
-    <div className="gameboy">
-      <div className="screen-surround">
-        <div className="screen-label">PokeWalk</div>
-        <div className="screen">
-          {state.scene === 'home' && (
-            <HomeScene pokedex={pokedex} onStart={startAdventure} />
-          )}
-          {state.scene === 'travel' && (
-            <TravelScene onDone={onTravelDone} />
-          )}
-          {state.scene === 'fork' && (
-            <ForkScene
-              step={state.path.length}
-              phase={forkPhase}
-              onArrived={onForkArrived}
-            />
-          )}
-          {state.scene === 'encounter' && (
-            <EncounterScene
-              habitat={state.currentHabitat}
-              onReady={onEncounterReady}
-            />
-          )}
-          {state.scene === 'battle' && (
-            <BattleScene
-              pokemon={state.currentPokemon}
-              round={state.battleRound}
-            />
-          )}
-          {state.scene === 'caught' && (
-            <CaughtScene pokemon={state.currentPokemon} onDone={goHome} />
-          )}
-          {state.scene === 'flee' && (
-            <FleeScene onDone={goHome} />
-          )}
-          {state.scene === 'duplicate' && (
-            <DuplicateScene pokemon={state.currentPokemon} onDone={goHome} />
-          )}
+    <LangContext.Provider value={lang}>
+      <div className="game-container">
+        {/* 언어 게임팩 */}
+        <div className="lang-packs">
+          {LANG_PACKS.map(lp => (
+            <button
+              key={lp.id}
+              className={`lang-pack${lang === lp.id ? ' active' : ''}`}
+              style={{ '--pack-color': lp.color }}
+              onClick={() => setLang(lp.id)}
+            >
+              {lp.label}
+            </button>
+          ))}
         </div>
-      </div>
 
-      <div className="controls">
-        <div className="dpad" />
-        <div className="choice-buttons">
-          {/* 버튼은 fork arrived 단계에서만 활성화 */}
-          {state.scene === 'fork' && forkPhase === 'arrived' && (
-            <ForkButtons onChoice={onForkChoice} step={state.path.length} />
-          )}
-          {state.scene === 'battle' && (
-            <BattleButtons onResult={onBattleResult} round={state.battleRound} />
-          )}
-        </div>
-        <div className="action-buttons">
-          <button className="btn-action btn-b">B</button>
-          <button className="btn-action btn-a">A</button>
-        </div>
-      </div>
+        <div className="gameboy">
+          <div className="screen-surround">
+            <div className="screen-label">PokeWalk</div>
+            <div className="screen">
+              {state.scene === 'home'      && <HomeScene pokedex={pokedex} onStart={startAdventure} />}
+              {state.scene === 'travel'    && <TravelScene onDone={onTravelDone} />}
+              {state.scene === 'fork'      && <ForkScene step={state.path.length} phase={forkPhase} onArrived={onForkArrived} />}
+              {state.scene === 'encounter' && <EncounterScene habitat={state.currentHabitat} onReady={onEncounterReady} />}
+              {state.scene === 'battle'    && <BattleScene pokemon={state.currentPokemon} round={state.battleRound} />}
+              {state.scene === 'caught'    && <CaughtScene pokemon={state.currentPokemon} onDone={goHome} />}
+              {state.scene === 'flee'      && <FleeScene onDone={goHome} />}
+              {state.scene === 'duplicate' && <DuplicateScene pokemon={state.currentPokemon} onDone={goHome} />}
+            </div>
+          </div>
 
-      <div className="start-select">
-        <button className="btn-small">SELECT</button>
-        <button className="btn-small">START</button>
+          <div className="controls">
+            <div className="dpad" />
+            <div className="choice-buttons">
+              {state.scene === 'fork' && forkPhase === 'arrived' && (
+                <ForkButtons onChoice={onForkChoice} />
+              )}
+              {state.scene === 'battle' && (
+                <BattleButtons onResult={onBattleResult} round={state.battleRound} />
+              )}
+            </div>
+            <div className="action-buttons">
+              <button className="btn-action btn-a">A</button>
+              <button className="btn-action btn-b">B</button>
+            </div>
+          </div>
+
+          <div className="start-select">
+            <button className="btn-small">SELECT</button>
+            <button className="btn-small">START</button>
+          </div>
+        </div>
       </div>
-    </div>
+    </LangContext.Provider>
   );
 }
 
-// ForkButtons: arrived 단계에서만 마운트되므로 타이머 자동 리셋
 function ForkButtons({ onChoice }) {
+  const t = T[useLang()];
   const [flash, setFlash] = useState(null);
   const pendingRef = useRef(null);
 
@@ -193,14 +185,8 @@ function ForkButtons({ onChoice }) {
 
   return (
     <>
-      <button
-        className={`btn-choice${flash === 'left' ? ' highlighted' : ''}`}
-        onClick={() => onChoice('left')}
-      >여기로</button>
-      <button
-        className={`btn-choice${flash === 'right' ? ' highlighted' : ''}`}
-        onClick={() => onChoice('right')}
-      >저기로</button>
+      <button className={`btn-choice${flash === 'left'  ? ' highlighted' : ''}`} onClick={() => onChoice('left')}>{t.here}</button>
+      <button className={`btn-choice${flash === 'right' ? ' highlighted' : ''}`} onClick={() => onChoice('right')}>{t.there}</button>
       <div className="timer-bar-wrap">
         <div className="timer-bar" style={{ width: `${ratio * 100}%` }} />
       </div>
@@ -209,21 +195,20 @@ function ForkButtons({ onChoice }) {
 }
 
 function BattleButtons({ onResult, round }) {
+  const t = T[useLang()];
+  const RPS_LABELS = [t.scissors, t.rock, t.paper];
   const [flash, setFlash] = useState(null);
   const pendingRef = useRef(null);
 
   useEffect(() => () => clearTimeout(pendingRef.current), []);
 
-  // round를 resetKey로 전달 → 라운드마다 타이머 재시작
   const ratio = useAutoTimer(3, () => {
     const player = randomRps();
     setFlash(player);
     pendingRef.current = setTimeout(() => onResult(rpsResult(player, randomRps())), 500);
   }, true, round);
 
-  function choose(key) {
-    onResult(rpsResult(key, randomRps()));
-  }
+  function choose(key) { onResult(rpsResult(key, randomRps())); }
 
   return (
     <>

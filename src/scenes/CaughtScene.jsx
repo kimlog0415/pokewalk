@@ -1,10 +1,16 @@
 import { useEffect } from 'react';
+import { useLang } from '../contexts/LangContext';
+import { T } from '../data/translations';
 import './CaughtScene.css';
 
 export default function CaughtScene({ pokemon, onDone }) {
+  const lang = useLang();
+  const t = T[lang];
+  const name = pokemon?.names?.[lang] ?? pokemon?.name;
+
   useEffect(() => {
-    const t = setTimeout(onDone, 5000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(onDone, 5000);
+    return () => clearTimeout(timer);
   }, [onDone]);
 
   return (
@@ -13,10 +19,10 @@ export default function CaughtScene({ pokemon, onDone }) {
       {pokemon && (
         <>
           <div className="caught-pokemon sparkle-anim">
-            <img src={pokemon.sprite} alt={pokemon.name} width={80} height={80} />
+            <img src={pokemon.sprite} alt={name} width={100} height={100} />
           </div>
           <div className="caught-dialog">
-            <p>{pokemon.name} 을(를) 잡았다!</p>
+            <p>{t.caught(name)}</p>
           </div>
         </>
       )}

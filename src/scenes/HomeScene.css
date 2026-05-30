@@ -102,7 +102,7 @@
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.78);
+  background: rgba(0, 0, 0, 0.78);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,7 +120,7 @@
   align-items: center;
   gap: 6px;
   position: relative;
-  box-shadow: 0 0 24px rgba(255,204,0,0.25);
+  box-shadow: 0 0 24px rgba(255, 204, 0, 0.25);
 }
 
 .card-close {
@@ -137,7 +137,9 @@
   padding: 2px 4px;
 }
 
-.card-close:hover { color: #fff; }
+.card-close:hover {
+  color: #fff;
+}
 
 .card-no {
   font-size: 9px;
@@ -159,7 +161,7 @@
 }
 
 .card-flavor {
-  font-size: 9px;
+  font-size: 11px;
   color: #ccc;
   text-align: center;
   line-height: 1.9;
@@ -169,7 +171,9 @@
   margin: 0;
 }
 
-.card-flavor::-webkit-scrollbar { display: none; }
+.card-flavor::-webkit-scrollbar {
+  display: none;
+}
 
 /* ---- Start button ---- */
 .btn-start {

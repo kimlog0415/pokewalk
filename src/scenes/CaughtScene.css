@@ -17,8 +17,13 @@
 }
 
 @keyframes flashIn {
-  0%   { opacity: 1; }
-  100% { opacity: 0; pointer-events: none; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .caught-pokemon {
@@ -34,19 +39,27 @@
 .caught-dialog {
   position: absolute;
   bottom: 0;
-  left: 0; right: 0;
-  background: rgba(0,0,0,0.8);
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
   border-top: 2px solid #ffcc00;
   padding: 6px 8px;
-  font-size: 9px;
+  font-size: 12px;
   color: #ffcc00;
   text-align: center;
   z-index: 2;
 }
 
 @keyframes sparkle {
-  0%, 100% { filter: drop-shadow(0 0 4px #ffcc00); transform: scale(1); }
-  50%       { filter: drop-shadow(0 0 16px #ffcc00); transform: scale(1.1); }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px #ffcc00);
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 16px #ffcc00);
+    transform: scale(1.1);
+  }
 }
 
 .sparkle-anim {

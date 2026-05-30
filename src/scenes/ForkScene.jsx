@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
+import { useLang } from '../contexts/LangContext';
+import { T } from '../data/translations';
 import './ForkScene.css';
 
-// phase: 'walking' → 2초 → onArrived() → 'arrived'
 export default function ForkScene({ step, phase, onArrived }) {
+  const t = T[useLang()];
+
   useEffect(() => {
     if (phase !== 'walking') return;
-    const t = setTimeout(onArrived, 2000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(onArrived, 2000);
+    return () => clearTimeout(timer);
   }, [phase, step]);
 
   const isWalking = phase === 'walking';
@@ -17,8 +20,8 @@ export default function ForkScene({ step, phase, onArrived }) {
       <div className={`char char-walk fork-char${isWalking ? ' anim-walk' : ''}`} />
       {!isWalking && (
         <div className="fork-dialog">
-          <p>갈림길이다!</p>
-          <p className="fork-step">({step + 1} / 4)</p>
+          <p>{t.fork}</p>
+          <p className="fork-step">{t.forkStep(step + 1)}</p>
         </div>
       )}
     </div>
