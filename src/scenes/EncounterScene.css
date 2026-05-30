@@ -25,8 +25,8 @@
 
 .encounter-pokemon {
   position: absolute;
-  bottom: 55px;
-  right: 8%;
+  bottom: var(--field-pokemon-bottom);
+  right: var(--field-pokemon-right);
   image-rendering: pixelated;
 }
 

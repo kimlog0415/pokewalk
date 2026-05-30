@@ -1,6 +1,8 @@
 /* 서식지 씬 공유 상수 */
 :root {
-  --field-pokemon-size: 112px;
+  --field-pokemon-size:  112px;
+  --field-pokemon-right: 8%;
+  --field-pokemon-bottom: 55px;
 }
 
 /* 서식지별 배경 이미지 — EncounterScene, FleeScene, DuplicateScene 공유 */
