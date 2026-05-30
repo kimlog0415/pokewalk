@@ -190,7 +190,7 @@ export default function App() {
               {!started && (
                 <div
                   className={`start-overlay${startFading ? ' fading' : ''}`}
-                  onClick={handleStart}
+                  onClick={() => { playClick(); handleStart(); }}
                 >
                   <div className="start-title">PokeWalk</div>
                   <img className="start-char" src={charFrontUrl} alt="" />
