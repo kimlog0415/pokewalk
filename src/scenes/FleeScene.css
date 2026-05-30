@@ -1,4 +1,5 @@
 @import "./sprites.css";
+@import "./habitats.css";
 
 .flee-scene {
   width: 100%;
@@ -10,15 +11,15 @@
 .flee-bg {
   position: absolute;
   inset: 0;
-  background-image: url("../assets/backgrounds/bg_grassland.png");
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: center;
 }
 
+/* battle-char와 동일 위치에서 출발 */
 .flee-char {
   bottom: 55px;
-  left: 40%;
+  left: 15%;
 }
 
 .flee-dialog {

@@ -157,7 +157,7 @@ export default function App() {
               {state.scene === 'encounter' && <EncounterScene habitat={state.currentHabitat} onReady={onEncounterReady} />}
               {state.scene === 'battle'    && <BattleScene pokemon={state.currentPokemon} round={state.battleRound} reveal={battleReveal} />}
               {state.scene === 'caught'    && <CaughtScene pokemon={state.currentPokemon} onDone={goHome} />}
-              {state.scene === 'flee'      && <FleeScene onDone={goHome} />}
+              {state.scene === 'flee'      && <FleeScene habitat={state.currentHabitat} onDone={goHome} />}
               {state.scene === 'duplicate' && <DuplicateScene pokemon={state.currentPokemon} onDone={goHome} />}
             </div>
           </div>

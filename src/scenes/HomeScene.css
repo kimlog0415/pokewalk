@@ -86,6 +86,22 @@
   flex-shrink: 0;
 }
 
+.pokedex-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
+.pokedex-close:hover {
+  color: #fff;
+}
+
 .home-title {
   font-size: 11px;
   color: #ffcc00;

@@ -3,7 +3,7 @@ import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import './FleeScene.css';
 
-export default function FleeScene({ onDone }) {
+export default function FleeScene({ habitat, onDone }) {
   const t = T[useLang()];
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function FleeScene({ onDone }) {
 
   return (
     <div className="flee-scene">
-      <div className="flee-bg" />
+      <div className={`flee-bg habitat-${habitat ?? 'grassland'}`} />
       <div className="char char-walk-back anim-walk-out flee-char" />
       <div className="flee-dialog">{t.fled}</div>
     </div>

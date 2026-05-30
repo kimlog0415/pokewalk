@@ -1,4 +1,5 @@
 @import "./sprites.css";
+@import "./habitats.css";
 
 .encounter-scene {
   width: 100%;
@@ -15,27 +16,6 @@
   background-position: center;
 }
 
-.habitat-grassland {
-  background-image: url("../assets/backgrounds/bg_grassland.png");
-}
-.habitat-mountain {
-  background-image: url("../assets/backgrounds/bg_mountain.png");
-}
-.habitat-forest {
-  background-image: url("../assets/backgrounds/bg_forest.png");
-}
-.habitat-urban {
-  background-image: url("../assets/backgrounds/bg_urban.png");
-}
-.habitat-water_edge {
-  background-image: url("../assets/backgrounds/bg_water_edge.png");
-}
-.habitat-sea {
-  background-image: url("../assets/backgrounds/bg_sea.png");
-}
-.habitat-cave {
-  background-image: url("../assets/backgrounds/bg_cave.png");
-}
 
 .encounter-char {
   bottom: 55px;

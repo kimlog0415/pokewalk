@@ -1,0 +1,8 @@
+/* 서식지별 배경 이미지 — EncounterScene, FleeScene, DuplicateScene 공유 */
+.habitat-grassland  { background-image: url('../assets/backgrounds/bg_grassland.png'); }
+.habitat-mountain   { background-image: url('../assets/backgrounds/bg_mountain.png'); }
+.habitat-forest     { background-image: url('../assets/backgrounds/bg_forest.png'); }
+.habitat-urban      { background-image: url('../assets/backgrounds/bg_urban.png'); }
+.habitat-water_edge { background-image: url('../assets/backgrounds/bg_water_edge.png'); }
+.habitat-sea        { background-image: url('../assets/backgrounds/bg_sea.png'); }
+.habitat-cave       { background-image: url('../assets/backgrounds/bg_cave.png'); }

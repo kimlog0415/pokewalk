@@ -63,7 +63,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onDone }) {
       cancelAnimationFrame(rafRef.current);
       clearTimeout(promptTimer);
     };
-  }, [phase, onQuestion]);
+  }, [phase, onQuestion, showPokedex]); // 도감 열릴 때 타이머 중단, 닫힐 때 재시작
 
   // 퇴장 애니메이션 후 travel로 전환
   useEffect(() => {
@@ -110,7 +110,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onDone }) {
           <div className="pokedex-header">
             <span className="home-title">{t.pokedex}</span>
             <span className="home-count">{count} / {TOTAL}</span>
-            <button className="card-close" onClick={() => setShowPokedex(false)}>✕</button>
+            <button className="pokedex-close" onClick={() => setShowPokedex(false)}>✕</button>
           </div>
           <div className="pokedex-grid">
             {Array.from({ length: TOTAL }, (_, i) => i + 1).map(id => {
