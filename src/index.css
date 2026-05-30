@@ -50,7 +50,7 @@ body {
 }
 
 .screen-label {
-  font-size: 8px;
+  font-size: 9px;
   color: #666;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -115,7 +115,7 @@ body {
   border: none;
   cursor: pointer;
   font-family: inherit;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: bold;
   color: #fff;
   box-shadow: 0 4px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
@@ -149,7 +149,7 @@ body {
   border: 2px solid #fff;
   border-radius: 4px;
   font-family: inherit;
-  font-size: 8px;
+  font-size: 9px;
   cursor: pointer;
   image-rendering: pixelated;
   box-shadow: 0 3px 0 #111, inset 0 1px 0 rgba(255,255,255,0.1);
@@ -207,7 +207,7 @@ body {
   box-shadow: 0 2px 0 #555;
   cursor: pointer;
   font-family: inherit;
-  font-size: 6px;
+  font-size: 7px;
   color: #444;
   letter-spacing: 1px;
 }

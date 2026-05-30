@@ -15,47 +15,87 @@
   margin-bottom: 6px;
   border-bottom: 2px solid #446;
   padding-bottom: 4px;
+  flex-shrink: 0;
 }
 
 .home-title {
-  font-size: 10px;
+  font-size: 11px;
   color: #ffcc00;
   letter-spacing: 2px;
 }
 
 .home-count {
-  font-size: 8px;
+  font-size: 9px;
   color: #aaa;
 }
 
 .pokedex-grid {
   display: grid;
-  grid-template-columns: repeat(15, 1fr);
-  gap: 2px;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
   flex: 1;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* 스크롤바 숨기기 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pokedex-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .dex-slot {
   aspect-ratio: 1;
   border: 1px solid #334;
-  border-radius: 2px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #111;
+  position: relative;
+  overflow: visible;
 }
 
 .dex-slot.caught {
   background: #1a2a1a;
   border-color: #4a8;
+  cursor: pointer;
 }
 
 .dex-slot img {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   object-fit: contain;
   image-rendering: pixelated;
+  display: block;
+  transition: filter 0.15s;
+}
+
+.dex-slot.caught:hover img {
+  filter: brightness(0.55);
+}
+
+.dex-tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.9);
+  color: #ffcc00;
+  font-size: 7px;
+  padding: 3px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 10;
+  border: 1px solid #446;
+}
+
+.dex-slot.caught:hover .dex-tooltip {
+  opacity: 1;
 }
 
 .btn-start {
@@ -66,11 +106,12 @@
   color: #fff;
   border: 2px solid #ff5555;
   font-family: inherit;
-  font-size: 9px;
+  font-size: 10px;
   cursor: pointer;
   letter-spacing: 2px;
   box-shadow: 0 3px 0 #881111;
   transition: transform 0.08s, box-shadow 0.08s;
+  flex-shrink: 0;
 }
 
 .btn-start:active {

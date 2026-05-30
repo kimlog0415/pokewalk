@@ -45,7 +45,8 @@
 }
 
 .anim-walk-in {
-  animation: charWalk 0.45s steps(3) infinite, charWalkIn 2s linear forwards;
+  /* both: from 키프레임을 즉시 적용해 시작 위치 플래시 방지 */
+  animation: charWalk 0.45s steps(3) infinite, charWalkIn 2s linear both;
 }
 
 .anim-walk-out {

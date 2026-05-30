@@ -4,9 +4,10 @@ export default function BattleScene({ pokemon, round }) {
   return (
     <div className="battle-scene">
       <div className="battle-bg" />
+      <div className="char char-walk battle-char" />
       {pokemon && (
         <div className="battle-pokemon">
-          <img src={pokemon.sprite} alt={pokemon.name} width={80} height={80} />
+          <img src={pokemon.sprite} alt={pokemon.name} width={112} height={112} />
           <div className="battle-pokemon-name">{pokemon.name}</div>
         </div>
       )}

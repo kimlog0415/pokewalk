@@ -15,16 +15,19 @@ export default function HomeScene({ pokedex, onStart }) {
 
       <div className="pokedex-grid">
         {Array.from({ length: TOTAL }, (_, i) => i + 1).map(id => {
-          const caught = pokedex.includes(id);
+          const entry = pokedex.find(p => p.id === id);
+          const caught = !!entry;
           return (
             <div key={id} className={`dex-slot ${caught ? 'caught' : 'empty'}`}>
               {caught && (
-                <img
-                  src={`${SPRITE_BASE}${id}.png`}
-                  alt={`#${id}`}
-                  width={24}
-                  height={24}
-                />
+                <>
+                  <img
+                    src={`${SPRITE_BASE}${id}.png`}
+                    alt={entry.nameKo}
+                    draggable={false}
+                  />
+                  <div className="dex-tooltip">{entry.nameKo}</div>
+                </>
               )}
             </div>
           );

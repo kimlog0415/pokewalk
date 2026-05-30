@@ -82,7 +82,7 @@ export default function App() {
 
   function onBattleResult(result) {
     if (result === 'win') {
-      catchPokemon(state.currentPokemon.id);
+      catchPokemon({ id: state.currentPokemon.id, nameKo: state.currentPokemon.name });
       go('caught');
     } else if (result === 'lose') {
       go('flee');
