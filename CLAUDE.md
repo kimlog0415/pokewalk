@@ -100,7 +100,6 @@
 - [ ] **GitHub Pages 배포 설정** — `vite.config.js`에 `base: '/pokewalk/'` 추가 + `.github/workflows/deploy.yml`
 - [ ] **도감 완성도 표시/리워드** — 151마리 수집 진행률 강조, 완성 시 연출
 - [ ] **모바일 반응형 점검** — 480px 이하 레이아웃 실기기 확인
-- [ ] **sfx_draw** — 가위바위보 비겼을 때 효과음 없음
 
 ---
 
@@ -310,7 +309,6 @@ max(13) - min(7.5) = 5.5로 난이도 격차를 의도적으로 좁게 설계.
   - `sfx_catch` — 포획 성공
   - `sfx_flee` — 도망
   - `sfx_duplicate` — 이미 잡은 포켓몬
-- 미구현: `sfx_draw` — 가위바위보 비김
 
 ### FX (시각 효과)
 
