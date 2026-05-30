@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import bgmHome   from '../assets/audio/bgm_home.mp3';
-import bgmTravel from '../assets/audio/bgm_travel.mp3';
-import bgmBattle from '../assets/audio/bgm_battle.mp3';
-import bgmCaught from '../assets/audio/bgm_caught.mp3';
+import bgmHome   from '../assets/audio/bgm_home.ogg';
+import bgmTravel from '../assets/audio/bgm_travel.ogg';
+import bgmBattle from '../assets/audio/bgm_battle.ogg';
+import bgmCaught from '../assets/audio/bgm_caught.ogg';
 
 // 모듈 로드 시 Audio 객체 생성 + preload=auto
 // → 게임 시작 전에 브라우저가 파일을 미리 다운로드해두므로 딜레이 없음
