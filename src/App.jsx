@@ -1,5 +1,18 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import charFrontUrl from './assets/sprites/char_front.png';
+import bgGrassland  from './assets/backgrounds/bg_grassland.png';
+import bgMountain   from './assets/backgrounds/bg_mountain.png';
+import bgForest     from './assets/backgrounds/bg_forest.png';
+import bgUrban      from './assets/backgrounds/bg_urban.png';
+import bgWaterEdge  from './assets/backgrounds/bg_water_edge.png';
+import bgSea        from './assets/backgrounds/bg_sea.png';
+import bgCave       from './assets/backgrounds/bg_cave.png';
+
+// 앱 로드 시 서식지 배경 전체 preload (encounter 진입 시 빈 화면 방지)
+[bgGrassland, bgMountain, bgForest, bgUrban, bgWaterEdge, bgSea, bgCave].forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { useBgm } from './hooks/useBgm';
@@ -74,7 +87,7 @@ export default function App() {
         setTimeout(() => {
           fadingRef.current = false;
           setFading(false);
-        }, 50);
+        }, 150);
       }, 250);
     }));
   }, []);
