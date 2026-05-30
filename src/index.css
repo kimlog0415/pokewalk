@@ -220,6 +220,9 @@ body {
   gap: 8px;
   flex: 1;
   align-items: center;
+  /* 가위바위보 3개 + 타이머바 기준 고정 높이 */
+  min-height: 148px;
+  justify-content: center;
 }
 
 .btn-choice {
