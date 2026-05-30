@@ -29,8 +29,13 @@
 }
 
 .duplicate-pokemon.faded {
-  opacity: 0.4;
   filter: grayscale(1);
+  animation: dupFadeOut 2.5s ease-in forwards;
+}
+
+@keyframes dupFadeOut {
+  0%   { opacity: 0.55; }
+  100% { opacity: 0; }
 }
 
 .duplicate-dialog {
