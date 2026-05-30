@@ -83,6 +83,10 @@ body {
     0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
+.lang-pack.active::after {
+  display: none;
+}
+
 /* ---------- Game Boy Frame ---------- */
 .gameboy {
   position: relative;
