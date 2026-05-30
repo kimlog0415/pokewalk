@@ -1,6 +1,7 @@
-import { useLang } from '../contexts/LangContext';
-import { T } from '../data/translations';
-import './BattleScene.css';
+import { useLang } from "../contexts/LangContext";
+import { T } from "../data/translations";
+import { flipStyle } from "../data/faceRight";
+import "./BattleScene.css";
 
 export default function BattleScene({ pokemon, round }) {
   const lang = useLang();
@@ -13,7 +14,7 @@ export default function BattleScene({ pokemon, round }) {
       <div className="char char-walk battle-char" />
       {pokemon && (
         <div className="battle-pokemon">
-          <img src={pokemon.sprite} alt={name} width={200} height={200} />
+          <img src={pokemon.sprite} alt={name} width={150} height={150} style={flipStyle(pokemon.id)} />
           <div className="battle-pokemon-name">{name}</div>
         </div>
       )}

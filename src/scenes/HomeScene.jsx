@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
+import { flipStyle } from '../data/faceRight';
 import './HomeScene.css';
 
 const TOTAL = 151;
@@ -73,7 +74,7 @@ function PokemonCard({ entry, lang, onClose }) {
       <div className="pokemon-card" onClick={e => e.stopPropagation()}>
         <button className="card-close" onClick={onClose}>✕</button>
         <div className="card-no">No.{String(entry.id).padStart(3, '0')}</div>
-        <img className="card-img" src={`${SPRITE_ART}${entry.id}.png`} alt={name} />
+        <img className="card-img" src={`${SPRITE_ART}${entry.id}.png`} alt={name} style={flipStyle(entry.id)} />
         <div className="card-name">{name}</div>
         <p className="card-flavor">{flavor === null ? '...' : flavor}</p>
       </div>

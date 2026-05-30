@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { pickPokemon } from '../data/habitats';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
+import { flipStyle } from '../data/faceRight';
 import './EncounterScene.css';
 
 const SPRITE_ART = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
@@ -56,7 +57,7 @@ export default function EncounterScene({ habitat, onReady }) {
       <div className={`char char-walk encounter-char${phase === 'walk' ? ' anim-walk-in' : ''}`} />
       {phase === 'reveal' && pokemon && (
         <div className="encounter-pokemon appear-anim">
-          <img src={pokemon.sprite} alt={name} width={96} height={96} />
+          <img src={pokemon.sprite} alt={name} width={96} height={96} style={flipStyle(pokemon.id)} />
         </div>
       )}
       <div className="encounter-dialog">

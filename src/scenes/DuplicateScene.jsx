@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
+import { flipStyle } from '../data/faceRight';
 import './DuplicateScene.css';
 
 export default function DuplicateScene({ pokemon, onDone }) {
@@ -19,7 +20,7 @@ export default function DuplicateScene({ pokemon, onDone }) {
       <div className="char char-walk-back anim-walk-out duplicate-char" />
       {pokemon && (
         <div className="duplicate-pokemon faded">
-          <img src={pokemon.sprite} alt={name} width={64} height={64} />
+          <img src={pokemon.sprite} alt={name} width={64} height={64} style={flipStyle(pokemon.id)} />
         </div>
       )}
       <div className="duplicate-dialog">{t.alreadyHave}</div>
