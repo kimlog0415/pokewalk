@@ -12,7 +12,8 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-family: 'Galmuri11', 'DotGothic16', 'Press Start 2P', monospace, sans-serif;
+  font-family:
+    "Galmuri11", "DotGothic16", "Press Start 2P", monospace, sans-serif;
   image-rendering: pixelated;
 }
 
@@ -139,6 +140,7 @@ body {
   position: relative;
   border: 2px solid #222;
   image-rendering: pixelated;
+  margin: 0 auto;
 }
 
 /* Screen power LED */
