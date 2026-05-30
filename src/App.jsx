@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
+import { useBgm } from './hooks/useBgm';
 import { getHabitat } from './data/habitats';
 import { LangContext, useLang } from './contexts/LangContext';
 import { T } from './data/translations';
@@ -68,6 +69,7 @@ export default function App() {
   const revealTimerRef = useRef(null);
   const fadingRef = useRef(false);
   const { pokedex, catchPokemon, isDuplicate } = usePokedex();
+  useBgm(state.scene);
 
   const go = useCallback((nextScene, patch = {}) => {
     setState(s => ({ ...s, scene: nextScene, ...patch }));
