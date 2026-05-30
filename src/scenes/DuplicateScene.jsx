@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
@@ -10,7 +10,12 @@ export default function DuplicateScene({ pokemon, habitat, onDone }) {
   const t = T[lang];
   const name = pokemon?.names?.[lang] ?? pokemon?.name;
 
-  useEffect(() => { playDuplicate(); }, []);
+  const sfxPlayed = useRef(false);
+  useEffect(() => {
+    if (sfxPlayed.current) return;
+    sfxPlayed.current = true;
+    playDuplicate();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(onDone, 5000);

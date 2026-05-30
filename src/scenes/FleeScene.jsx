@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { playFlee } from '../utils/sfx';
@@ -7,7 +7,12 @@ import './FleeScene.css';
 export default function FleeScene({ habitat, onDone }) {
   const t = T[useLang()];
 
-  useEffect(() => { playFlee(); }, []);
+  const sfxPlayed = useRef(false);
+  useEffect(() => {
+    if (sfxPlayed.current) return;
+    sfxPlayed.current = true;
+    playFlee();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(onDone, 5000);
