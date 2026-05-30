@@ -6,8 +6,9 @@ import './ForkScene.css';
 export default function ForkScene({ step, phase, onArrived }) {
   const t = T[useLang()];
   // step마다 배경 시작 위치를 랜덤하게 변경
+  // bgScroll 10s, 0~-260px 범위 내에서 step마다 랜덤 시작
   const bgDelay = useMemo(
-    () => `-${(Math.random() * 14).toFixed(2)}s`,
+    () => `-${(Math.random() * 10).toFixed(2)}s`,
     [step]
   );
 
@@ -22,7 +23,7 @@ export default function ForkScene({ step, phase, onArrived }) {
   return (
     <div className="fork-scene">
       <div
-        className={`fork-bg${isWalking ? ' bg-scroll' : ''}`}
+        className={isWalking ? 'fork-bg-walk bg-scroll' : 'fork-bg-arrived'}
         style={isWalking ? { animationDelay: bgDelay } : undefined}
       />
       <div className={`char char-walk fork-char${isWalking ? ' anim-walk' : ''}`} />

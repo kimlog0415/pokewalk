@@ -7,10 +7,16 @@
   overflow: hidden;
 }
 
-.fork-bg {
+/* 걷는 중: grassland 스크롤 (bg-scroll 클래스와 함께 사용) */
+.fork-bg-walk {
+  background-image: url("../assets/backgrounds/bg_grassland.png");
+}
+
+/* 도착: 이정표 배경 고정 */
+.fork-bg-arrived {
   position: absolute;
   inset: 0;
-  background-image: url("../assets/backgrounds/bg_grassland.png");
+  background-image: url("../assets/backgrounds/bg_fork.png");
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: center;

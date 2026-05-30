@@ -58,17 +58,18 @@
   animation: charWalk 0.45s steps(3) infinite, charWalkOut 3s linear forwards;
 }
 
-/* Background scroll: 우→좌 (전진) */
+/* Background scroll: 우→좌
+   이미지 표시 폭 ≈ 671px, 화면 380px → 안전 스크롤 범위 ≤ 291px */
 @keyframes bgScroll {
   from { background-position-x: 0px; }
-  to   { background-position-x: -800px; }
+  to   { background-position-x: -260px; }
 }
 
 .bg-scroll {
   position: absolute;
   inset: 0;
-  background-repeat: repeat-x;
+  background-repeat: no-repeat;
   background-size: auto 100%;
-  animation: bgScroll 14s linear infinite;
+  animation: bgScroll 10s linear infinite;
 }
 
