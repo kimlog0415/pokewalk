@@ -64,11 +64,11 @@
 }
 
 .dex-slot img {
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
   image-rendering: pixelated;
-  display: block;
   transition: filter 0.15s;
 }
 
