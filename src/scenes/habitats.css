@@ -1,3 +1,8 @@
+/* 서식지 씬 공유 상수 */
+:root {
+  --field-pokemon-size: 112px;
+}
+
 /* 서식지별 배경 이미지 — EncounterScene, FleeScene, DuplicateScene 공유 */
 .habitat-grassland  { background-image: url('../assets/backgrounds/bg_grassland.png'); }
 .habitat-mountain   { background-image: url('../assets/backgrounds/bg_mountain.png'); }

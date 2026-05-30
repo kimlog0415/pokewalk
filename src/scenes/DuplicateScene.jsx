@@ -20,7 +20,7 @@ export default function DuplicateScene({ pokemon, habitat, onDone }) {
       <div className="char char-walk-back anim-walk-out duplicate-char" />
       {pokemon && (
         <div className="duplicate-pokemon faded">
-          <img src={pokemon.sprite} alt={name} width={64} height={64} style={flipStyle(pokemon.id)} />
+          <img src={pokemon.sprite} alt={name} className="field-pokemon-img" style={flipStyle(pokemon.id)} />
         </div>
       )}
       <div className="duplicate-dialog">{t.alreadyHave}</div>

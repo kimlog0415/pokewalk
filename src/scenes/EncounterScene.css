@@ -30,6 +30,12 @@
   image-rendering: pixelated;
 }
 
+.field-pokemon-img {
+  width: var(--field-pokemon-size);
+  height: var(--field-pokemon-size);
+  display: block;
+}
+
 .encounter-pokemon img {
   filter:
     drop-shadow(0 0 6px rgba(255,255,255,0.9))

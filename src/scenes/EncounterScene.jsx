@@ -66,8 +66,7 @@ export default function EncounterScene({ habitat, onReady }) {
           <img
             src={pokemon.sprite}
             alt={name}
-            width={112}
-            height={112}
+            className="field-pokemon-img"
             style={flipStyle(pokemon.id)}
           />
         </div>
