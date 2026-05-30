@@ -111,7 +111,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone, 
           <div className="pokedex-header">
             <span className="home-title">{t.pokedex}</span>
             <span className="home-count">
-              {count} / {TOTAL}&nbsp;&nbsp;{Math.floor(count / TOTAL * 100)}%
+              {count} / {TOTAL}&nbsp;&nbsp;({Math.floor(count / TOTAL * 100)}%)
             </span>
             <button className="pokedex-close" onClick={() => { playClick(); setShowPokedex(false); }}>✕</button>
           </div>
