@@ -18,7 +18,8 @@
 
 .fork-char {
   bottom: 55px;
-  /* left는 inline style로 랜덤 지정, transform 없음 */
+  left: 38%;
+  transform: translateX(-50%);
 }
 
 .fork-dialog {
