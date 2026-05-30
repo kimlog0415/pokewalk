@@ -90,7 +90,6 @@
 
 **기타**
 - 게임기 프레임 UI, A/B 버튼은 회색(장식용), 실제 조작 버튼 강조
-- dev 단축: URL `?scene=battle|encounter|fork|...` 로 특정 씬 바로 진입
 
 ### 에셋 현황
 - 배경: bg_grassland/mountain/forest/urban/water_edge/sea/cave/fork/home (전부 3168×1344)

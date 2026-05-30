@@ -33,26 +33,8 @@ function randomRps() {
   return RPS_KEYS[Math.floor(Math.random() * 3)];
 }
 
-const DEV_POKEMON = {
-  id: 25,
-  names: { ko: '피카츄', ja: 'ピカチュウ', en: 'Pikachu' },
-  sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
-};
-
-const DEV_SCENES = {
-  battle:    { scene: 'battle',    currentPokemon: DEV_POKEMON, battleRound: 0 },
-  caught:    { scene: 'caught',    currentPokemon: DEV_POKEMON },
-  flee:      { scene: 'flee' },
-  duplicate: { scene: 'duplicate', currentPokemon: DEV_POKEMON },
-  encounter: { scene: 'encounter', currentHabitat: 'grassland' },
-  fork:      { scene: 'fork',      path: [] },
-  travel:    { scene: 'travel' },
-};
-
 function getInitialState() {
-  const p = new URLSearchParams(window.location.search).get('scene');
-  const base = { path: [], currentHabitat: null, currentPokemon: null, battleRound: 0 };
-  return { ...base, ...(DEV_SCENES[p] ?? { scene: 'home' }) };
+  return { scene: 'home', path: [], currentHabitat: null, currentPokemon: null, battleRound: 0 };
 }
 
 const LANG_PACKS = [
