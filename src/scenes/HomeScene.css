@@ -64,9 +64,10 @@
 }
 
 .dex-slot img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
   image-rendering: pixelated;
   transition: filter 0.15s;
 }
@@ -80,9 +81,9 @@
   bottom: 110%;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.9);
+  background: rgba(0, 0, 0, 0.9);
   color: #ffcc00;
-  font-size: 9px;
+  font-size: 12px;
   padding: 4px 6px;
   border-radius: 3px;
   white-space: nowrap;
@@ -97,6 +98,80 @@
   opacity: 1;
 }
 
+/* ---- Pokemon Detail Card ---- */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.pokemon-card {
+  background: #12122a;
+  border: 2px solid #ffcc00;
+  border-radius: 8px;
+  padding: 14px 16px 16px;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  box-shadow: 0 0 24px rgba(255,204,0,0.25);
+}
+
+.card-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+  padding: 2px 4px;
+}
+
+.card-close:hover { color: #fff; }
+
+.card-no {
+  font-size: 9px;
+  color: #666;
+  letter-spacing: 1px;
+}
+
+.card-img {
+  width: 130px;
+  height: 130px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.card-name {
+  font-size: 13px;
+  color: #ffcc00;
+  letter-spacing: 1px;
+}
+
+.card-flavor {
+  font-size: 9px;
+  color: #ccc;
+  text-align: center;
+  line-height: 1.9;
+  max-height: 70px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  margin: 0;
+}
+
+.card-flavor::-webkit-scrollbar { display: none; }
+
+/* ---- Start button ---- */
 .btn-start {
   margin-top: 6px;
   width: 100%;
@@ -105,11 +180,13 @@
   color: #fff;
   border: 2px solid #ff5555;
   font-family: inherit;
-  font-size: 10px;
+  font-size: 12px;
   cursor: pointer;
   letter-spacing: 2px;
   box-shadow: 0 3px 0 #881111;
-  transition: transform 0.08s, box-shadow 0.08s;
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
   flex-shrink: 0;
 }
 
