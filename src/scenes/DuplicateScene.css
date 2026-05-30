@@ -8,13 +8,17 @@
 }
 
 .duplicate-bg {
+  position: absolute;
+  inset: 0;
   background-image: url('../assets/backgrounds/bg_grassland.png');
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .duplicate-char {
   bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 40%;
 }
 
 .duplicate-pokemon {

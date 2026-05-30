@@ -38,7 +38,7 @@ export default function EncounterScene({ habitat, onReady }) {
   return (
     <div className="encounter-scene">
       <div className={`encounter-bg habitat-${habitat}`} />
-      <div className={`char char-walk encounter-char${phase === 'walk' ? ' anim-walk' : ''}`} />
+      <div className={`char char-walk encounter-char${phase === 'walk' ? ' anim-walk-in' : ''}`} />
       {phase === 'reveal' && pokemon && (
         <div className="encounter-pokemon appear-anim">
           <img src={pokemon.sprite} alt={pokemon.name} width={64} height={64} />

@@ -32,6 +32,26 @@
   animation: charWalk 0.45s steps(3) infinite;
 }
 
+/* 캐릭터 좌측 화면 밖에서 걸어들어옴 */
+@keyframes charWalkIn {
+  from { transform: translateX(-320px); }
+  to   { transform: translateX(0); }
+}
+
+/* 캐릭터 좌측 화면 밖으로 걸어나감 */
+@keyframes charWalkOut {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-320px); }
+}
+
+.anim-walk-in {
+  animation: charWalk 0.45s steps(3) infinite, charWalkIn 2s linear forwards;
+}
+
+.anim-walk-out {
+  animation: charWalk 0.45s steps(3) infinite, charWalkOut 3s linear forwards;
+}
+
 /* Background scroll: 우→좌 (전진) */
 @keyframes bgScroll {
   from { background-position-x: 0px; }
@@ -46,16 +66,3 @@
   animation: bgScroll 14s linear infinite;
 }
 
-/* Background scroll: 좌→우 (도망) */
-@keyframes bgScrollReverse {
-  from { background-position-x: 0px; }
-  to   { background-position-x: 800px; }
-}
-
-.bg-scroll-reverse {
-  position: absolute;
-  inset: 0;
-  background-repeat: repeat-x;
-  background-size: auto 100%;
-  animation: bgScrollReverse 14s linear infinite;
-}
