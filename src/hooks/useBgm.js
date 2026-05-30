@@ -47,12 +47,15 @@ export function useBgm(scene) {
     }
   }, [scene]);
 
-  // 첫 pointerdown 시 재시도 (autoplay 차단 복구)
+  // 첫 pointerdown 시 모든 트랙 unlock (iOS Safari 대응)
+  // 현재 트랙만 unlock하면 이후 다른 트랙은 useEffect에서 play() 해도 차단됨
   useEffect(() => {
     const resume = () => {
-      if (currentRef.current?.paused) {
-        currentRef.current.play().catch(() => {});
-      }
+      Object.values(TRACKS).forEach(audio => {
+        audio.play()
+          .then(() => { if (audio !== currentRef.current) audio.pause(); })
+          .catch(() => {});
+      });
       document.removeEventListener('pointerdown', resume);
     };
     document.addEventListener('pointerdown', resume);
