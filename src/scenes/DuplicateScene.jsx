@@ -12,7 +12,7 @@ export default function DuplicateScene({ pokemon, onDone }) {
 
   return (
     <div className="duplicate-scene">
-      <div className="bg-scroll duplicate-bg" />
+      <div className="bg-scroll-reverse duplicate-bg" />
       {!gone && <div className="char char-walk-back anim-walk duplicate-char" />}
       {pokemon && (
         <div className="duplicate-pokemon faded">

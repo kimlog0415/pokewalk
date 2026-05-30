@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
-import { getHabitat, pickPokemon } from './data/habitats';
+import { getHabitat } from './data/habitats';
 
 import HomeScene from './scenes/HomeScene';
 import TravelScene from './scenes/TravelScene';
@@ -37,6 +37,9 @@ export default function App() {
     currentPokemon: null,
     battleRound: 0,
   });
+  // fork 내부 단계: 'walking' → 2초 → 'arrived' (버튼 활성)
+  const [forkPhase, setForkPhase] = useState('walking');
+
   const { pokedex, catchPokemon, isDuplicate } = usePokedex();
 
   const go = useCallback((nextScene, patch = {}) => {
@@ -48,13 +51,21 @@ export default function App() {
   }
 
   function onTravelDone() {
+    setForkPhase('walking');
     go('fork');
   }
 
+  // ForkScene 내부 walking 끝나면 호출
+  function onForkArrived() {
+    setForkPhase('arrived');
+  }
+
+  // 버튼 선택 or 자동 선택
   function onForkChoice(dir) {
     const newPath = [...state.path, dir];
     if (newPath.length < 4) {
-      go('fork', { path: newPath });
+      setForkPhase('walking');
+      setState(s => ({ ...s, path: newPath }));
     } else {
       const habitat = getHabitat(newPath);
       go('encounter', { path: newPath, currentHabitat: habitat });
@@ -96,12 +107,15 @@ export default function App() {
             <TravelScene onDone={onTravelDone} />
           )}
           {state.scene === 'fork' && (
-            <ForkScene step={state.path.length} />
+            <ForkScene
+              step={state.path.length}
+              phase={forkPhase}
+              onArrived={onForkArrived}
+            />
           )}
           {state.scene === 'encounter' && (
             <EncounterScene
               habitat={state.currentHabitat}
-              path={state.path}
               onReady={onEncounterReady}
             />
           )}
@@ -126,8 +140,9 @@ export default function App() {
       <div className="controls">
         <div className="dpad" />
         <div className="choice-buttons">
-          {state.scene === 'fork' && (
-            <ForkButtons onChoice={onForkChoice} />
+          {/* 버튼은 fork arrived 단계에서만 활성화 */}
+          {state.scene === 'fork' && forkPhase === 'arrived' && (
+            <ForkButtons onChoice={onForkChoice} step={state.path.length} />
           )}
           {state.scene === 'battle' && (
             <BattleButtons onResult={onBattleResult} round={state.battleRound} />
@@ -147,15 +162,29 @@ export default function App() {
   );
 }
 
+// ForkButtons: arrived 단계에서만 마운트되므로 타이머 자동 리셋
 function ForkButtons({ onChoice }) {
+  const [flash, setFlash] = useState(null);
+  const pendingRef = useRef(null);
+
+  useEffect(() => () => clearTimeout(pendingRef.current), []);
+
   const ratio = useAutoTimer(3, () => {
-    onChoice(Math.random() < 0.5 ? 'left' : 'right');
+    const dir = Math.random() < 0.5 ? 'left' : 'right';
+    setFlash(dir);
+    pendingRef.current = setTimeout(() => onChoice(dir), 500);
   });
 
   return (
     <>
-      <button className="btn-choice" onClick={() => onChoice('left')}>여기로</button>
-      <button className="btn-choice" onClick={() => onChoice('right')}>저기로</button>
+      <button
+        className={`btn-choice${flash === 'left' ? ' highlighted' : ''}`}
+        onClick={() => onChoice('left')}
+      >여기로</button>
+      <button
+        className={`btn-choice${flash === 'right' ? ' highlighted' : ''}`}
+        onClick={() => onChoice('right')}
+      >저기로</button>
       <div className="timer-bar-wrap">
         <div className="timer-bar" style={{ width: `${ratio * 100}%` }} />
       </div>
@@ -164,9 +193,17 @@ function ForkButtons({ onChoice }) {
 }
 
 function BattleButtons({ onResult, round }) {
+  const [flash, setFlash] = useState(null);
+  const pendingRef = useRef(null);
+
+  useEffect(() => () => clearTimeout(pendingRef.current), []);
+
+  // round를 resetKey로 전달 → 라운드마다 타이머 재시작
   const ratio = useAutoTimer(3, () => {
-    onResult(rpsResult(randomRps(), randomRps()));
-  }, true);
+    const player = randomRps();
+    setFlash(player);
+    pendingRef.current = setTimeout(() => onResult(rpsResult(player, randomRps())), 500);
+  }, true, round);
 
   function choose(key) {
     onResult(rpsResult(key, randomRps()));
@@ -175,7 +212,11 @@ function BattleButtons({ onResult, round }) {
   return (
     <>
       {RPS_KEYS.map((key, i) => (
-        <button key={key} className="btn-choice" onClick={() => choose(key)}>
+        <button
+          key={key}
+          className={`btn-choice${flash === key ? ' highlighted' : ''}`}
+          onClick={() => choose(key)}
+        >
           {RPS_LABELS[i]}
         </button>
       ))}

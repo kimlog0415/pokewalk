@@ -9,7 +9,6 @@
 
 .flee-bg {
   background-image: url('../assets/backgrounds/bg_grassland.png');
-  animation-direction: reverse;
 }
 
 .flee-char {

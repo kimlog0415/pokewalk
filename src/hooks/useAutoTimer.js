@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-// seconds: 카운트다운 시간
-// onExpire: 시간 초과 시 호출
-// active: 타이머 동작 여부
-export function useAutoTimer(seconds, onExpire, active = true) {
+// resetKey: 변경될 때마다 타이머 재시작 (battle round 등에 사용)
+export function useAutoTimer(seconds, onExpire, active = true, resetKey = 0) {
   const [remaining, setRemaining] = useState(seconds);
   const expireRef = useRef(onExpire);
   expireRef.current = onExpire;
@@ -22,7 +20,7 @@ export function useAutoTimer(seconds, onExpire, active = true) {
       }
     }, 100);
     return () => clearInterval(interval);
-  }, [seconds, active]);
+  }, [seconds, active, resetKey]);
 
-  return remaining / seconds; // 0~1 (progress ratio)
+  return remaining / seconds;
 }

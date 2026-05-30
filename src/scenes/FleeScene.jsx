@@ -12,7 +12,7 @@ export default function FleeScene({ onDone }) {
 
   return (
     <div className="flee-scene">
-      <div className="bg-scroll flee-bg" />
+      <div className="bg-scroll-reverse flee-bg" />
       {!gone && <div className="char char-walk-back anim-walk flee-char" />}
       <div className="flee-dialog">도망쳤다...</div>
     </div>
