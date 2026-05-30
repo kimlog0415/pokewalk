@@ -47,8 +47,9 @@ export function useBgm(scene) {
     }
   }, [scene]);
 
-  // 첫 pointerdown 시 모든 트랙 unlock (iOS Safari 대응)
-  // 현재 트랙만 unlock하면 이후 다른 트랙은 useEffect에서 play() 해도 차단됨
+  // 첫 click 시 모든 트랙 unlock
+  // click은 React onClick(playClick 등) 이후 document까지 버블링되므로
+  // sfx가 audio context를 먼저 unlock한 뒤 BGM play가 실행됨
   useEffect(() => {
     const resume = () => {
       Object.values(TRACKS).forEach(audio => {
@@ -56,10 +57,9 @@ export function useBgm(scene) {
           .then(() => { if (audio !== currentRef.current) audio.pause(); })
           .catch(() => {});
       });
-      document.removeEventListener('pointerdown', resume);
     };
-    document.addEventListener('pointerdown', resume);
-    return () => document.removeEventListener('pointerdown', resume);
+    document.addEventListener('click', resume, { once: true });
+    return () => document.removeEventListener('click', resume);
   }, []);
 
   useEffect(() => () => { currentRef.current?.pause(); }, []);
