@@ -13,8 +13,7 @@
 
 .travel-char {
   bottom: 55px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* left는 inline style로 랜덤 지정, transform 없음 (anim-walk-in-3s와 충돌 방지) */
 }
 
 .travel-text {

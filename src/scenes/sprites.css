@@ -49,6 +49,11 @@
   animation: charWalk 0.45s steps(3) infinite, charWalkIn 2s linear both;
 }
 
+/* travel 씬 전용: 3초 버전 */
+.anim-walk-in-3s {
+  animation: charWalk 0.45s steps(3) infinite, charWalkIn 3s linear both;
+}
+
 .anim-walk-out {
   animation: charWalk 0.45s steps(3) infinite, charWalkOut 3s linear forwards;
 }
