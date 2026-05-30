@@ -8,6 +8,8 @@
 }
 
 .encounter-bg {
+  position: absolute;
+  inset: 0;
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: center;
