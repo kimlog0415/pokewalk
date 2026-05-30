@@ -78,12 +78,25 @@
 
 .pokedex-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
   border-bottom: 2px solid #446;
   padding-bottom: 4px;
   flex-shrink: 0;
+}
+
+.pokedex-header .home-title {
+  flex: 1;
+}
+
+.pokedex-header .home-count {
+  flex: none;
+  text-align: center;
+}
+
+.pokedex-header .pokedex-close {
+  flex: 1;
+  text-align: right;
 }
 
 .pokedex-close {
