@@ -111,7 +111,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone }
           <div className="pokedex-header">
             <span className="home-title">{t.pokedex}</span>
             <span className="home-count">{count} / {TOTAL}</span>
-            <button className="pokedex-close" onClick={() => setShowPokedex(false)}>✕</button>
+            <button className="pokedex-close" onClick={() => { playClick(); setShowPokedex(false); }}>✕</button>
           </div>
           <div className="pokedex-grid">
             {Array.from({ length: TOTAL }, (_, i) => i + 1).map(id => {
@@ -162,9 +162,9 @@ function PokemonCard({ entry, lang, onClose }) {
   }, [entry.id, lang]);
 
   return (
-    <div className="card-overlay" onClick={onClose}>
+    <div className="card-overlay" onClick={() => { playClick(); onClose(); }}>
       <div className="pokemon-card" onClick={e => e.stopPropagation()}>
-        <button className="card-close" onClick={onClose}>✕</button>
+        <button className="card-close" onClick={() => { playClick(); onClose(); }}>✕</button>
         <div className="card-no">No.{String(entry.id).padStart(3, '0')}</div>
         <img className="card-img" src={`${SPRITE_ART}${entry.id}.png`} alt={name} style={flipStyle(entry.id)} />
         <div className="card-name">{name}</div>
