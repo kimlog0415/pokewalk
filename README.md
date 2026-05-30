@@ -49,7 +49,7 @@
 | 배경 이미지 | [Google Gemini](https://gemini.google.com/) (AI 생성) |
 | 캐릭터 스프라이트 | [Google Gemini](https://gemini.google.com/) (AI 생성) |
 | BGM | [Suno](https://suno.com/) (AI 생성) + 루프 포인트 수동 편집 |
-| SFX | 출처 미상 |
+| SFX | [bfxr.net](https://www.bfxr.net/) · [freesound.org](https://freesound.org/) · [Pixabay](https://pixabay.com/sound-effects/) |
 | 포켓몬 스프라이트 | [PokeAPI Sprites](https://github.com/PokeAPI/sprites) |
 
 > PokeWalk는 팬 제작 비영리 프로젝트입니다.  
