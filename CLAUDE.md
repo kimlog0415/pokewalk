@@ -30,7 +30,7 @@
 - 8개 scene 상태머신 (`App.jsx`) — home/travel/fork/encounter/battle/caught/flee/duplicate
 - 갈림길 4단계 이진트리 → 16종착지 서식지 매핑 (`data/habitats.js`)
 - PokeAPI 연동 (포켓몬 정보 + 다국어 이름 + 도감 설명)
-- localStorage 도감 (`hooks/usePokedex.js`) — `{ id, names:{ko,ja,en} }` 배열 저장
+- localStorage 도감 (`hooks/usePokedex.js`) — `{ id, names:{ko,ja,en} }` 배열 + `seenIds` Set 저장
 - 자동 선택 타이머 (`hooks/useAutoTimer.js`) — resetKey로 라운드마다 재시작
 
 **다국어 (KO/JA/EN)**
@@ -46,7 +46,7 @@
 - fork: grassland 2s 스크롤 → bg_fork.png + 2s walk-in → 정지 + 갈림길 대화문 (ForkScene 내부 서브페이즈)
 - flee/duplicate: 해당 서식지 배경 + 배틀 위치(left:15%)에서 좌측 퇴장 — `scenes/habitats.css` 공유
 - duplicate: 중복 포켓몬 흑백 + 서서히 fade-out
-- battle: 가위바위보 결과 reveal 카드 (나 vs 상대 손 이모지 + 결과 색상)
+- battle: 선택 즉시 버튼 숨김(battlePending 1s) → reveal 카드 (나 vs 상대 손 이모지 + 결과 색상)
 - caught: 반짝임 효과
 - 화면 전환: `withFade()` 검은 오버레이 250ms 암전 (home↔travel, fork→encounter, 귀환 전환)
 
@@ -58,6 +58,8 @@
 - 나갈래 선택 → 우측 퇴장(`anim-walk-out-right`) 1.5s → travel
 - 도감 오버레이 열려있으면 question 타이머 중단, 열 때 question 상태면 자동 dismiss
 - 도감: 우상단 소형 버튼 → 화면 내 오버레이 (5열 그리드 + 포켓몬 상세 카드 모달)
+- 새로 잡은 포켓몬 슬롯에 금색 pulse 테두리 (클릭 시 소멸) — `seenIds` Set을 `localStorage("pokedex_seen")`에 저장
+- 도감 헤더: `n / 151 (x%)` 항상 중앙 고정
 
 **Press-Start 오버레이**
 - 앱 로드 시 검은 오버레이 표시 (타이틀 + char_front + PRESS START 깜빡임)
@@ -75,6 +77,7 @@
 - sfx_click: 선택 버튼 전체, 언어팩, 도감 버튼/슬롯/닫기, START 버튼, 오버레이
 - sfx_encounter: 포켓몬 등장 시 (reveal phase)
 - sfx_win/lose: RPS 결과 확정 즉시
+- sfx_battlePending: RPS 선택 직후 (1s 대기 중)
 - sfx_catch/flee/duplicate: 해당 씬 마운트 시 1회 (useRef 플래그로 StrictMode 이중 방지)
 
 **CSS 공유 상수 (`scenes/habitats.css`)**
@@ -94,11 +97,10 @@
 - 캐릭터: char_walk, char_walk_back (2048×701, 3프레임), char_front (단일)
 - 포켓몬: PokeAPI (small + official-artwork)
 - BGM: bgm_home/travel/battle/caught (.ogg)
-- SFX: sfx_click/encounter/win/lose/catch/flee/duplicate (.ogg) ※ sfx_draw 미구현
+- SFX: sfx_click/encounter/win/lose/catch/flee/duplicate/battlePending (.ogg)
 
 ### 남은 작업 (TODO)
-- [ ] **GitHub Pages 배포 설정** — `vite.config.js`에 `base: '/pokewalk/'` 추가 + `.github/workflows/deploy.yml`
-- [ ] **도감 완성도 표시/리워드** — 151마리 수집 진행률 강조, 완성 시 연출
+- [ ] **도감 완성도 리워드** — 151마리 완성 시 특별 연출
 - [ ] **모바일 반응형 점검** — 480px 이하 레이아웃 실기기 확인
 
 ---
