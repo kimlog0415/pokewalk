@@ -50,6 +50,13 @@
   image-rendering: pixelated;
 }
 
+.encounter-pokemon img {
+  filter:
+    drop-shadow(0 0 6px rgba(255,255,255,0.9))
+    drop-shadow(0 0 14px rgba(255,255,255,0.5))
+    drop-shadow(2px 4px 8px rgba(0,0,0,0.7));
+}
+
 .encounter-dialog {
   position: absolute;
   bottom: 0;
