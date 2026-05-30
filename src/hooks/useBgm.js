@@ -2,15 +2,15 @@ import { useEffect, useRef } from 'react';
 import bgmHome   from '../assets/audio/bgm_home.mp3';
 import bgmTravel from '../assets/audio/bgm_travel.mp3';
 import bgmBattle from '../assets/audio/bgm_battle.mp3';
+import bgmCaught from '../assets/audio/bgm_caught.mp3';
 
-// encounter 진입부터 분기 종료(caught/flee/duplicate)까지 battle BGM 유지
 const SCENE_BGM = {
   home:      bgmHome,
   travel:    bgmTravel,
   fork:      bgmTravel,
   encounter: bgmBattle,
   battle:    bgmBattle,
-  caught:    bgmBattle,
+  caught:    bgmCaught,
   flee:      bgmBattle,
   duplicate: bgmBattle,
 };
