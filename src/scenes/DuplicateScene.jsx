@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
+import { playDuplicate } from '../utils/sfx';
 import './DuplicateScene.css';
 
 export default function DuplicateScene({ pokemon, habitat, onDone }) {
@@ -10,6 +11,7 @@ export default function DuplicateScene({ pokemon, habitat, onDone }) {
   const name = pokemon?.names?.[lang] ?? pokemon?.name;
 
   useEffect(() => {
+    playDuplicate();
     const timer = setTimeout(onDone, 5000);
     return () => clearTimeout(timer);
   }, [onDone]);

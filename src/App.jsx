@@ -3,7 +3,7 @@ import charFrontUrl from './assets/sprites/char_front.png';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { useBgm } from './hooks/useBgm';
-import { playClick } from './utils/sfx';
+import { playClick, playWin, playLose } from './utils/sfx';
 import { getHabitat } from './data/habitats';
 import { LangContext, useLang } from './contexts/LangContext';
 import { T } from './data/translations';
@@ -135,6 +135,8 @@ export default function App() {
   // 가위바위보: player/cpu 선택을 받아 reveal 표시 후 결과 처리
   function onBattlePlay(player, cpu) {
     const result = rpsResult(player, cpu);
+    if (result === 'win') playWin();
+    else if (result === 'lose') playLose();
     setBattleReveal({ player, cpu, result });
     revealTimerRef.current = setTimeout(() => {
       setBattleReveal(null);

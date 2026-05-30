@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
+import { playCatch } from '../utils/sfx';
 import './CaughtScene.css';
 
 export default function CaughtScene({ pokemon, onDone }) {
@@ -10,6 +11,7 @@ export default function CaughtScene({ pokemon, onDone }) {
   const name = pokemon?.names?.[lang] ?? pokemon?.name;
 
   useEffect(() => {
+    playCatch();
     const timer = setTimeout(onDone, 5000);
     return () => clearTimeout(timer);
   }, [onDone]);

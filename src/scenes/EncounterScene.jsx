@@ -3,6 +3,7 @@ import { pickPokemon } from "../data/habitats";
 import { useLang } from "../contexts/LangContext";
 import { T } from "../data/translations";
 import { flipStyle } from "../data/faceRight";
+import { playEncounter } from "../utils/sfx";
 import "./EncounterScene.css";
 
 const SPRITE_ART =
@@ -47,6 +48,7 @@ export default function EncounterScene({ habitat, onReady }) {
 
   useEffect(() => {
     if (phase === "reveal" && pokemon) {
+      playEncounter();
       const timer = setTimeout(() => onReady(pokemon), 2000);
       return () => clearTimeout(timer);
     }

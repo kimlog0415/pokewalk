@@ -3,6 +3,7 @@ import charFrontUrl from '../assets/sprites/char_front.png';
 import { useLang } from '../contexts/LangContext';
 import { T } from '../data/translations';
 import { flipStyle } from '../data/faceRight';
+import { playClick } from '../utils/sfx';
 import './HomeScene.css';
 
 const TOTAL = 151;
@@ -101,7 +102,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone }
         <div className="home-dialog">{t.homePrompt}</div>
       )}
 
-      <button className="home-dex-btn" onClick={() => { if (phase === 'question') onStay(); setShowPokedex(true); }}>
+      <button className="home-dex-btn" onClick={() => { playClick(); if (phase === 'question') onStay(); setShowPokedex(true); }}>
         {t.pokedex} {count}/{TOTAL}
       </button>
 
@@ -121,7 +122,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone }
                 <div
                   key={id}
                   className={`dex-slot ${caught ? 'caught' : 'empty'}`}
-                  onClick={() => caught && setSelected(entry)}
+                  onClick={() => { if (caught) { playClick(); setSelected(entry); } }}
                 >
                   {caught && (
                     <>
