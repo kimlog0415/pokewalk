@@ -25,14 +25,14 @@
 
 .encounter-char {
   bottom: 55px;
-  left: 28%;
-  transform: translateX(-50%);
+  left: 15%;
+  /* transform 없음 — anim-walk-in 종료 시 translateX(0)과 일치 */
 }
 
 .encounter-pokemon {
   position: absolute;
   bottom: 55px;
-  right: 20%;
+  right: 8%;
   image-rendering: pixelated;
 }
 

@@ -17,9 +17,9 @@
   background: radial-gradient(ellipse at center, #2a2a5a 0%, #0a0a1a 100%);
 }
 
-/* encounter 종료 위치와 일치: left 25%, bottom 55px */
+/* encounter 종료 위치와 일치: left 15%, bottom 55px */
 .battle-char {
-  left: 25%;
+  left: 15%;
   bottom: 55px;
   z-index: 1;
 }
