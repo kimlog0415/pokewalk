@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 
-const KEY = 'pokedex';
+const KEY      = 'pokedex';
+const SEEN_KEY = 'pokedex_seen';
+
+function loadSeen() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)) ?? []);
+  } catch {
+    return new Set();
+  }
+}
 
 function load() {
   try {
@@ -22,6 +31,7 @@ function load() {
 
 export function usePokedex() {
   const [pokedex, setPokedex] = useState(load);
+  const [seenIds, setSeenIds] = useState(loadSeen);
 
   // 이름이 '#id' 형태인 항목 → PokeAPI에서 다국어 이름 자동 갱신
   useEffect(() => {
@@ -60,5 +70,17 @@ export function usePokedex() {
     return pokedex.some(p => p.id === id);
   }
 
-  return { pokedex, catchPokemon, isDuplicate };
+  function markSeen(id) {
+    if (seenIds.has(id)) return;
+    const next = new Set(seenIds);
+    next.add(id);
+    setSeenIds(next);
+    localStorage.setItem(SEEN_KEY, JSON.stringify([...next]));
+  }
+
+  function isNew(id) {
+    return pokedex.some(p => p.id === id) && !seenIds.has(id);
+  }
+
+  return { pokedex, catchPokemon, isDuplicate, markSeen, isNew };
 }

@@ -16,7 +16,7 @@ const LEFT_BOUND  = 59;
 const RIGHT_BOUND = 307;
 const WALK_SPEED  = 80; // px/s
 
-export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone }) {
+export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone, markSeen, isNew }) {
   const lang = useLang();
   const t = T[lang];
   const count = pokedex.length;
@@ -121,8 +121,8 @@ export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone }
               return (
                 <div
                   key={id}
-                  className={`dex-slot ${caught ? 'caught' : 'empty'}`}
-                  onClick={() => { if (caught) { playClick(); setSelected(entry); } }}
+                  className={`dex-slot ${caught ? 'caught' : 'empty'}${caught && isNew(id) ? ' new-catch' : ''}`}
+                  onClick={() => { if (caught) { playClick(); markSeen(id); setSelected(entry); } }}
                 >
                   {caught && (
                     <>

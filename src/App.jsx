@@ -73,7 +73,7 @@ export default function App() {
   const [startFading, setStartFading] = useState(false);
   const revealTimerRef = useRef(null);
   const fadingRef = useRef(false);
-  const { pokedex, catchPokemon, isDuplicate } = usePokedex();
+  const { pokedex, catchPokemon, isDuplicate, markSeen, isNew } = usePokedex();
   useBgm(state.scene);
 
   const go = useCallback((nextScene, patch = {}) => {
@@ -185,7 +185,7 @@ export default function App() {
           <div className="screen-surround">
             <div className="screen-label">PokeWalk</div>
             <div className="screen">
-              {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={started ? onHomeQuestion : () => {}} onStay={onHomeStay} onDone={startAdventure} />}
+              {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={started ? onHomeQuestion : () => {}} onStay={onHomeStay} onDone={startAdventure} markSeen={markSeen} isNew={isNew} />}
               {state.scene === 'travel'    && <TravelScene onDone={onTravelDone} />}
               {state.scene === 'fork'      && <ForkScene step={state.path.length} phase={forkPhase} onArrived={onForkArrived} />}
               {state.scene === 'encounter' && <EncounterScene habitat={state.currentHabitat} onReady={onEncounterReady} />}

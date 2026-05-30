@@ -146,6 +146,16 @@
   cursor: pointer;
 }
 
+.dex-slot.new-catch {
+  border-color: #ffcc00;
+  animation: newCatchPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes newCatchPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 204, 0, 0.4); }
+  50%       { box-shadow: 0 0 10px rgba(255, 204, 0, 0.85); }
+}
+
 .dex-slot img {
   max-width: 90%;
   max-height: 90%;
