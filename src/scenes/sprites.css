@@ -65,6 +65,16 @@
   to   { background-position-x: -260px; }
 }
 
+/* 홈 씬: 캐릭터 우측 화면 밖으로 퇴장 */
+@keyframes charWalkOutRight {
+  from { transform: translateX(0); }
+  to   { transform: translateX(420px); }
+}
+
+.anim-walk-out-right {
+  animation: charWalk 0.45s steps(3) infinite, charWalkOutRight 1.5s linear forwards;
+}
+
 .bg-scroll {
   position: absolute;
   inset: 0;

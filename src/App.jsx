@@ -61,6 +61,7 @@ const LANG_PACKS = [
 export default function App() {
   const [lang, setLang] = useState('ko');
   const [state, setState] = useState(getInitialState);
+  const [homePhase, setHomePhase] = useState('walking');
   const [forkPhase, setForkPhase] = useState('walking');
   const [battleReveal, setBattleReveal] = useState(null); // { player, cpu, result }
   const revealTimerRef = useRef(null);
@@ -70,9 +71,13 @@ export default function App() {
     setState(s => ({ ...s, scene: nextScene, ...patch }));
   }, []);
 
-  function startAdventure() {
+  const onHomeQuestion = useCallback(() => setHomePhase('question'), []);
+  const onHomeGoOut    = useCallback(() => setHomePhase('exit'), []);
+  const onHomeStay     = useCallback(() => setHomePhase('walking'), []);
+
+  const startAdventure = useCallback(() => {
     go('travel', { path: [], currentHabitat: null, currentPokemon: null, battleRound: 0 });
-  }
+  }, [go]);
 
   function onTravelDone() {
     setForkPhase('walking');
@@ -120,7 +125,10 @@ export default function App() {
 
   useEffect(() => () => clearTimeout(revealTimerRef.current), []);
 
-  function goHome() { go('home'); }
+  function goHome() {
+    setHomePhase('walking');
+    go('home');
+  }
 
   return (
     <LangContext.Provider value={lang}>
@@ -143,7 +151,7 @@ export default function App() {
           <div className="screen-surround">
             <div className="screen-label">PokeWalk</div>
             <div className="screen">
-              {state.scene === 'home'      && <HomeScene pokedex={pokedex} onStart={startAdventure} />}
+              {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={onHomeQuestion} onDone={startAdventure} />}
               {state.scene === 'travel'    && <TravelScene onDone={onTravelDone} />}
               {state.scene === 'fork'      && <ForkScene step={state.path.length} phase={forkPhase} onArrived={onForkArrived} />}
               {state.scene === 'encounter' && <EncounterScene habitat={state.currentHabitat} onReady={onEncounterReady} />}
@@ -157,6 +165,9 @@ export default function App() {
           <div className="controls">
             <div className="dpad" />
             <div className="choice-buttons">
+              {state.scene === 'home' && homePhase === 'question' && (
+                <HomeButtons onGoOut={onHomeGoOut} onStay={onHomeStay} />
+              )}
               {state.scene === 'fork' && forkPhase === 'arrived' && (
                 <ForkButtons onChoice={onForkChoice} />
               )}
@@ -177,6 +188,40 @@ export default function App() {
         </div>
       </div>
     </LangContext.Provider>
+  );
+}
+
+function HomeButtons({ onGoOut, onStay }) {
+  const t = T[useLang()];
+  const [flash, setFlash] = useState(null);
+  const pendingRef = useRef(null);
+
+  useEffect(() => () => clearTimeout(pendingRef.current), []);
+
+  // 3초 초과 시 자동으로 '있을래' 선택
+  const ratio = useAutoTimer(3, () => {
+    setFlash('stay');
+    pendingRef.current = setTimeout(onStay, 500);
+  });
+
+  return (
+    <>
+      <button
+        className={`btn-choice${flash === 'out' ? ' highlighted' : ''}`}
+        onClick={onGoOut}
+      >
+        {t.goOut}
+      </button>
+      <button
+        className={`btn-choice${flash === 'stay' ? ' highlighted' : ''}`}
+        onClick={onStay}
+      >
+        {t.stayHome}
+      </button>
+      <div className="timer-bar-wrap">
+        <div className="timer-bar" style={{ width: `${ratio * 100}%` }} />
+      </div>
+    </>
   );
 }
 

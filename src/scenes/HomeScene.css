@@ -1,14 +1,82 @@
+@import "./sprites.css";
+
 .home-scene {
   width: 100%;
   height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/backgrounds/bg_home.png');
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+
+/* 걷기/퇴장 캐릭터 */
+.home-char {
+  bottom: 55px;
+}
+
+/* 앞보기 캐릭터 (char_front.png 단일 이미지) */
+.home-char-front {
+  position: absolute;
+  bottom: 55px;
+  width: 64px;
+  height: 66px;
+  image-rendering: pixelated;
+}
+
+/* 하단 다이얼로그 */
+.home-dialog {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.78);
+  border-top: 2px solid #fff;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #ffcc00;
+  z-index: 2;
+}
+
+/* 도감 버튼 (우상단 소형) */
+.home-dex-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 9px;
+  padding: 3px 6px;
+  cursor: pointer;
+  z-index: 3;
+  letter-spacing: 1px;
+}
+
+.home-dex-btn:hover {
+  background: rgba(255, 204, 0, 0.18);
+}
+
+/* ---- 도감 오버레이 ---- */
+.pokedex-overlay {
+  position: absolute;
+  inset: 0;
   background: #1a1a2e;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   padding: 8px;
-  color: #e8e8e8;
 }
 
-.home-header {
+.pokedex-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,7 +104,6 @@
   flex: 1;
   overflow-y: scroll;
   overflow-x: hidden;
-  /* 스크롤바 숨기기 */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -98,7 +165,7 @@
   opacity: 1;
 }
 
-/* ---- Pokemon Detail Card ---- */
+/* ---- 포켓몬 상세 카드 ---- */
 .card-overlay {
   position: absolute;
   inset: 0;
@@ -185,28 +252,4 @@
 
 .card-flavor::-webkit-scrollbar-track {
   background: transparent;
-}
-
-/* ---- Start button ---- */
-.btn-start {
-  margin-top: 6px;
-  width: 100%;
-  padding: 6px;
-  background: #cc3333;
-  color: #fff;
-  border: 2px solid #ff5555;
-  font-family: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  letter-spacing: 2px;
-  box-shadow: 0 3px 0 #881111;
-  transition:
-    transform 0.08s,
-    box-shadow 0.08s;
-  flex-shrink: 0;
-}
-
-.btn-start:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #881111;
 }

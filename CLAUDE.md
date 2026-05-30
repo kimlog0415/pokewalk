@@ -49,9 +49,13 @@
 - battle: 가위바위보 결과 reveal 카드 (나 vs 상대 손 이모지 + 결과 색상)
 - caught: 반짝임 효과
 
-**도감 (home)**
-- 5열 그리드, 스크롤바 숨김, hover 시 이미지 어둡게 + 한국어 이름 툴팁
-- 슬롯 클릭 → 상세 카드 모달 (official-artwork + 이름 + 도감설명, 설명 스크롤 가능)
+**home 씬 (bg_home.png)**
+- `char_front.png` (단일 프레임) 포함, 3종 캐릭터 스프라이트 운용
+- 캐릭터 bg_home.png 원본 좌표 277~1449 범위 (화면 59~307px) 를 왔다갔다 걷기
+- 5초마다 "나갈까? 말까?" 질문 → `homePhase` (App.jsx): `'walking'|'question'|'exit'`
+- question 시 캐릭터 정면(`char_front.png`) 정지, HomeButtons(choice-buttons 영역)에 3초 타이머
+- 3초 초과 자동선택 → '있을래' (stay). 나갈래 선택 시 우측 퇴장(`anim-walk-out-right`) 1.5s → travel
+- 도감은 우상단 소형 버튼 클릭 → 화면 내 오버레이 (5열 그리드, 슬롯 클릭 → 상세 카드 모달)
 
 **스프라이트 방향**
 - `data/faceRight.js` — 오른쪽 보는 포켓몬 ID는 scaleX(-1)로 좌우반전
@@ -101,10 +105,12 @@
 scene: 'home' | 'travel' | 'fork' | 'encounter' | 'battle' | 'caught' | 'flee' | 'duplicate'
 ```
 
-### 1. home (홈/도감)
+### 1. home (홈)
 
-- 포획한 포켓몬 도감 표시
-- "탐험 시작" 버튼
+- bg_home.png 배경, 캐릭터가 원본 이미지 277~1449px 구간(화면 59~307px)을 좌우로 왔다갔다
+- 5초마다 "나갈까? 말까?" 질문 팝업 (3초 타이머, 초과 시 '있을래' 자동선택)
+- "나갈래!" 선택 → 캐릭터 우측 퇴장 1.5s → travel
+- 우상단 소형 도감 버튼 → 화면 내 오버레이로 도감 열람
 
 ### 2. travel (이동)
 
