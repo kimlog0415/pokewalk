@@ -29,14 +29,30 @@ function randomRps() {
   return RPS_KEYS[Math.floor(Math.random() * 3)];
 }
 
+const DEV_POKEMON = {
+  id: 25,
+  name: '피카츄',
+  sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+};
+
+const DEV_SCENES = {
+  battle:    { scene: 'battle',    currentPokemon: DEV_POKEMON, battleRound: 0 },
+  caught:    { scene: 'caught',    currentPokemon: DEV_POKEMON },
+  flee:      { scene: 'flee' },
+  duplicate: { scene: 'duplicate', currentPokemon: DEV_POKEMON },
+  encounter: { scene: 'encounter', currentHabitat: 'grassland' },
+  fork:      { scene: 'fork',      path: [] },
+  travel:    { scene: 'travel' },
+};
+
+function getInitialState() {
+  const p = new URLSearchParams(window.location.search).get('scene');
+  const base = { path: [], currentHabitat: null, currentPokemon: null, battleRound: 0 };
+  return { ...base, ...(DEV_SCENES[p] ?? { scene: 'home' }) };
+}
+
 export default function App() {
-  const [state, setState] = useState({
-    scene: 'home',
-    path: [],
-    currentHabitat: null,
-    currentPokemon: null,
-    battleRound: 0,
-  });
+  const [state, setState] = useState(getInitialState);
   // fork 내부 단계: 'walking' → 2초 → 'arrived' (버튼 활성)
   const [forkPhase, setForkPhase] = useState('walking');
 
