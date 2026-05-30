@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { pickPokemon } from '../data/habitats';
 import './EncounterScene.css';
 
-const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
 
 const HABITAT_TEXT = {
   grassland:  '풀밭을 헤치며...',

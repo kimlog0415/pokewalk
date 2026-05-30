@@ -32,7 +32,7 @@ function randomRps() {
 const DEV_POKEMON = {
   id: 25,
   name: '피카츄',
-  sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+  sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
 };
 
 const DEV_SCENES = {
