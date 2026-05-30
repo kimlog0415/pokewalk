@@ -6,9 +6,9 @@ import './ForkScene.css';
 export default function ForkScene({ step, phase, onArrived }) {
   const t = T[useLang()];
   // step마다 배경 시작 위치를 랜덤하게 변경
-  // bgScroll 10s, 0~-260px 범위 내에서 step마다 랜덤 시작
+  // 최대 딜레이 -8s: fork 걷기 2초 안에 루프 점프 없음 (2/10*260 + 8/10*260 = 260)
   const bgDelay = useMemo(
-    () => `-${(Math.random() * 10).toFixed(2)}s`,
+    () => `-${(Math.random() * 8).toFixed(2)}s`,
     [step]
   );
 
