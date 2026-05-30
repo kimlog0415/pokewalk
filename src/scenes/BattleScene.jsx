@@ -11,9 +11,11 @@ export default function BattleScene({ pokemon, round, reveal }) {
   const name = pokemon?.names?.[lang] ?? pokemon?.name;
 
   const resultText =
-    reveal?.result === "win" ? t.rpsWin
-      : reveal?.result === "lose" ? t.rpsLose
-      : t.rpsDraw;
+    reveal?.result === "win"
+      ? t.rpsWin
+      : reveal?.result === "lose"
+        ? t.rpsLose
+        : t.rpsDraw;
 
   return (
     <div className="battle-scene">
@@ -21,7 +23,13 @@ export default function BattleScene({ pokemon, round, reveal }) {
       <div className="char char-walk battle-char" />
       {pokemon && (
         <div className="battle-pokemon">
-          <img src={pokemon.sprite} alt={name} width={150} height={150} style={flipStyle(pokemon.id)} />
+          <img
+            src={pokemon.sprite}
+            alt={name}
+            width={150}
+            height={150}
+            style={flipStyle(pokemon.id)}
+          />
           <div className="battle-pokemon-name">{name}</div>
         </div>
       )}
@@ -29,19 +37,21 @@ export default function BattleScene({ pokemon, round, reveal }) {
       {reveal && (
         <div className="rps-reveal">
           <div className="rps-side">
-            <span className="rps-label">{t.opponent}</span>
-            <span className="rps-hand">{RPS_EMOJI[reveal.cpu]}</span>
+            <span className="rps-label">{t.me}</span>
+            <span className="rps-hand">{RPS_EMOJI[reveal.player]}</span>
           </div>
           <span className="rps-vs">VS</span>
           <div className="rps-side">
-            <span className="rps-label">{t.me}</span>
-            <span className="rps-hand">{RPS_EMOJI[reveal.player]}</span>
+            <span className="rps-label">{t.opponent}</span>
+            <span className="rps-hand">{RPS_EMOJI[reveal.cpu]}</span>
           </div>
         </div>
       )}
 
-      <div className={`battle-dialog${reveal ? ` result-${reveal.result}` : ""}`}>
-        {reveal ? resultText : (round === 0 ? t.rps : t.retry(round))}
+      <div
+        className={`battle-dialog${reveal ? ` result-${reveal.result}` : ""}`}
+      >
+        {reveal ? resultText : round === 0 ? t.rps : t.retry(round)}
       </div>
     </div>
   );
