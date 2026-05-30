@@ -165,7 +165,7 @@ export default function App() {
           <div className="screen-surround">
             <div className="screen-label">PokeWalk</div>
             <div className="screen">
-              {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={onHomeQuestion} onDone={startAdventure} />}
+              {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={onHomeQuestion} onStay={onHomeStay} onDone={startAdventure} />}
               {state.scene === 'travel'    && <TravelScene onDone={onTravelDone} />}
               {state.scene === 'fork'      && <ForkScene step={state.path.length} phase={forkPhase} onArrived={onForkArrived} />}
               {state.scene === 'encounter' && <EncounterScene habitat={state.currentHabitat} onReady={onEncounterReady} />}

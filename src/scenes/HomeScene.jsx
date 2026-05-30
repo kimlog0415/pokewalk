@@ -15,7 +15,7 @@ const LEFT_BOUND  = 59;
 const RIGHT_BOUND = 307;
 const WALK_SPEED  = 80; // px/s
 
-export default function HomeScene({ pokedex, phase, onQuestion, onDone }) {
+export default function HomeScene({ pokedex, phase, onQuestion, onStay, onDone }) {
   const lang = useLang();
   const t = T[lang];
   const count = pokedex.length;
@@ -30,9 +30,9 @@ export default function HomeScene({ pokedex, phase, onQuestion, onDone }) {
   const charXRef  = useRef(LEFT_BOUND); // float 누산용
   const dirRef    = useRef(true);
 
-  // RAF 기반 걷기 루프 (60fps, React 리렌더 없음)
+  // RAF 기반 걷기 루프 — 도감 열려있으면 타이머/RAF 정지
   useEffect(() => {
-    if (phase !== 'walking') return;
+    if (phase !== 'walking' || showPokedex) return;
     lastTsRef.current = null;
 
     const tick = (ts) => {
@@ -101,7 +101,7 @@ export default function HomeScene({ pokedex, phase, onQuestion, onDone }) {
         <div className="home-dialog">{t.homePrompt}</div>
       )}
 
-      <button className="home-dex-btn" onClick={() => setShowPokedex(true)}>
+      <button className="home-dex-btn" onClick={() => { if (phase === 'question') onStay(); setShowPokedex(true); }}>
         {t.pokedex} {count}/{TOTAL}
       </button>
 
