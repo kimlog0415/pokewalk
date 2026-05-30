@@ -3,6 +3,7 @@ import charFrontUrl from './assets/sprites/char_front.png';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { useBgm } from './hooks/useBgm';
+import { playClick } from './utils/sfx';
 import { getHabitat } from './data/habitats';
 import { LangContext, useLang } from './contexts/LangContext';
 import { T } from './data/translations';
@@ -164,7 +165,7 @@ export default function App() {
               key={lp.id}
               className={`lang-pack${lang === lp.id ? ' active' : ''}`}
               style={{ '--pack-color': lp.color }}
-              onClick={() => setLang(lp.id)}
+              onClick={() => { playClick(); setLang(lp.id); }}
             >
               {lp.label}
             </button>
@@ -218,7 +219,7 @@ export default function App() {
 
           <div className="start-select">
             <button className="btn-small">SELECT</button>
-            <button className={`btn-small${!started ? ' btn-small-active' : ''}`} onClick={!started ? handleStart : undefined}>START</button>
+            <button className={`btn-small${!started ? ' btn-small-active' : ''}`} onClick={!started ? () => { playClick(); handleStart(); } : undefined}>START</button>
           </div>
         </div>
       </div>
@@ -244,13 +245,13 @@ function HomeButtons({ onGoOut, onStay }) {
     <>
       <button
         className={`btn-choice${flash === 'out' ? ' highlighted' : ''}`}
-        onClick={onGoOut}
+        onClick={() => { playClick(); onGoOut(); }}
       >
         {t.goOut}
       </button>
       <button
         className={`btn-choice${flash === 'stay' ? ' highlighted' : ''}`}
-        onClick={onStay}
+        onClick={() => { playClick(); onStay(); }}
       >
         {t.stayHome}
       </button>
@@ -276,8 +277,8 @@ function ForkButtons({ onChoice }) {
 
   return (
     <>
-      <button className={`btn-choice${flash === 'left'  ? ' highlighted' : ''}`} onClick={() => onChoice('left')}>{t.here}</button>
-      <button className={`btn-choice${flash === 'right' ? ' highlighted' : ''}`} onClick={() => onChoice('right')}>{t.there}</button>
+      <button className={`btn-choice${flash === 'left'  ? ' highlighted' : ''}`} onClick={() => { playClick(); onChoice('left');  }}>{t.here}</button>
+      <button className={`btn-choice${flash === 'right' ? ' highlighted' : ''}`} onClick={() => { playClick(); onChoice('right'); }}>{t.there}</button>
       <div className="timer-bar-wrap">
         <div className="timer-bar" style={{ width: `${ratio * 100}%` }} />
       </div>
@@ -299,7 +300,7 @@ function BattleButtons({ onPlay, round }) {
     pendingRef.current = setTimeout(() => onPlay(player, randomRps()), 500);
   }, true, round);
 
-  function choose(key) { onPlay(key, randomRps()); }
+  function choose(key) { playClick(); onPlay(key, randomRps()); }
 
   return (
     <>
