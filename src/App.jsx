@@ -3,7 +3,7 @@ import charFrontUrl from './assets/sprites/char_front.png';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { useBgm } from './hooks/useBgm';
-import { playClick, playWin, playLose } from './utils/sfx';
+import { playClick, playWin, playLose, playBattlePending } from './utils/sfx';
 import { getHabitat } from './data/habitats';
 import { LangContext, useLang } from './contexts/LangContext';
 import { T } from './data/translations';
@@ -67,6 +67,7 @@ export default function App() {
   const [homePhase, setHomePhase] = useState('walking');
   const [forkPhase, setForkPhase] = useState('walking');
   const [battleReveal, setBattleReveal] = useState(null); // { player, cpu, result }
+  const [battlePending, setBattlePending] = useState(false);
   const [fading, setFading] = useState(false);
   const [started, setStarted] = useState(false);
   const [startFading, setStartFading] = useState(false);
@@ -132,23 +133,29 @@ export default function App() {
     }
   }
 
-  // 가위바위보: player/cpu 선택을 받아 reveal 표시 후 결과 처리
+  // 가위바위보: 선택 → 1s pending → reveal → 1.5s 후 씬 전환
   function onBattlePlay(player, cpu) {
-    const result = rpsResult(player, cpu);
-    if (result === 'win') playWin();
-    else if (result === 'lose') playLose();
-    setBattleReveal({ player, cpu, result });
+    setBattlePending(true);
+    playBattlePending();
     revealTimerRef.current = setTimeout(() => {
-      setBattleReveal(null);
-      if (result === 'win') {
-        catchPokemon({ id: state.currentPokemon.id, names: state.currentPokemon.names });
-        go('caught');
-      } else if (result === 'lose') {
-        go('flee');
-      } else {
-        go('battle', { battleRound: state.battleRound + 1 });
-      }
-    }, 1500);
+      const result = rpsResult(player, cpu);
+      if (result === 'win') playWin();
+      else if (result === 'lose') playLose();
+      setBattlePending(false);
+      setBattleReveal({ player, cpu, result });
+      revealTimerRef.current = setTimeout(() => {
+        setBattleReveal(null);
+        if (result === 'win') {
+          catchPokemon({ id: state.currentPokemon.id, names: state.currentPokemon.names });
+          go('caught');
+        } else if (result === 'lose') {
+          go('flee');
+        } else {
+          setBattlePending(false);
+          go('battle', { battleRound: state.battleRound + 1 });
+        }
+      }, 1500);
+    }, 1000);
   }
 
   useEffect(() => () => clearTimeout(revealTimerRef.current), []);
@@ -209,7 +216,7 @@ export default function App() {
               {state.scene === 'fork' && forkPhase === 'arrived' && (
                 <ForkButtons onChoice={onForkChoice} />
               )}
-              {state.scene === 'battle' && !battleReveal && (
+              {state.scene === 'battle' && !battleReveal && !battlePending && (
                 <BattleButtons onPlay={onBattlePlay} round={state.battleRound} />
               )}
             </div>
