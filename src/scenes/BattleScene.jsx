@@ -51,7 +51,7 @@ export default function BattleScene({ pokemon, round, reveal }) {
       <div
         className={`battle-dialog${reveal ? ` result-${reveal.result}` : ""}`}
       >
-        {reveal ? resultText : round === 0 ? t.rps : t.retry(round)}
+        {reveal ? resultText : round === 0 ? t.rps : t.retry(round + 1)}
       </div>
     </div>
   );
