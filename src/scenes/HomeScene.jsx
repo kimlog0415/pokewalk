@@ -13,47 +13,54 @@ const SPRITE_ART   = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/s
 // 원본 좌표 277px → ~59px, 1449px → ~307px (화면 기준)
 const LEFT_BOUND  = 59;
 const RIGHT_BOUND = 307;
-const WALK_SPEED  = 50;  // px/s
-const WALK_TICK   = 50;  // ms
-const PX_PER_TICK = (WALK_SPEED * WALK_TICK) / 1000; // 2.5px/tick
+const WALK_SPEED  = 80; // px/s
 
 export default function HomeScene({ pokedex, phase, onQuestion, onDone }) {
   const lang = useLang();
   const t = T[lang];
   const count = pokedex.length;
 
-  const [charX, setCharX]       = useState(LEFT_BOUND);
   const [dirRight, setDirRight] = useState(true);
   const [showPokedex, setShowPokedex] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  const charXRef = useRef(LEFT_BOUND);
-  const dirRef   = useRef(true);
+  const charRef   = useRef(null);
+  const rafRef    = useRef(null);
+  const lastTsRef = useRef(null);
+  const charXRef  = useRef(LEFT_BOUND); // float 누산용
+  const dirRef    = useRef(true);
 
-  // 걷기 루프: phase가 'walking'일 때만 동작
+  // RAF 기반 걷기 루프 (60fps, React 리렌더 없음)
   useEffect(() => {
     if (phase !== 'walking') return;
+    lastTsRef.current = null;
 
-    const moveInterval = setInterval(() => {
-      const dx = dirRef.current ? PX_PER_TICK : -PX_PER_TICK;
-      let newX = charXRef.current + dx;
-      if (newX >= RIGHT_BOUND) {
-        newX = RIGHT_BOUND;
-        dirRef.current = false;
-        setDirRight(false);
-      } else if (newX <= LEFT_BOUND) {
-        newX = LEFT_BOUND;
-        dirRef.current = true;
-        setDirRight(true);
+    const tick = (ts) => {
+      if (lastTsRef.current === null) lastTsRef.current = ts;
+      const dt = Math.min(ts - lastTsRef.current, 50); // 탭 숨김 등 big-jump 방지
+      lastTsRef.current = ts;
+
+      charXRef.current += (WALK_SPEED * dt / 1000) * (dirRef.current ? 1 : -1);
+
+      if (charXRef.current >= RIGHT_BOUND) {
+        charXRef.current = RIGHT_BOUND;
+        if (dirRef.current) { dirRef.current = false; setDirRight(false); }
+      } else if (charXRef.current <= LEFT_BOUND) {
+        charXRef.current = LEFT_BOUND;
+        if (!dirRef.current) { dirRef.current = true; setDirRight(true); }
       }
-      charXRef.current = newX;
-      setCharX(newX);
-    }, WALK_TICK);
 
+      if (charRef.current) {
+        charRef.current.style.left = `${Math.round(charXRef.current)}px`;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
     const promptTimer = setTimeout(onQuestion, 5000);
 
     return () => {
-      clearInterval(moveInterval);
+      cancelAnimationFrame(rafRef.current);
       clearTimeout(promptTimer);
     };
   }, [phase, onQuestion]);
@@ -80,15 +87,19 @@ export default function HomeScene({ pokedex, phase, onQuestion, onDone }) {
           className="home-char-front"
           src={charFrontUrl}
           alt=""
-          style={{ left: charX }}
+          style={{ left: Math.round(charXRef.current) }}
         />
       ) : (
-        <div className={charClass} style={{ left: charX }} />
+        <div
+          ref={charRef}
+          className={charClass}
+          style={{ left: Math.round(charXRef.current) }}
+        />
       )}
 
-      <div className="home-dialog">
-        {phase === 'question' ? t.homePrompt : t.exploring}
-      </div>
+      {phase === 'question' && (
+        <div className="home-dialog">{t.homePrompt}</div>
+      )}
 
       <button className="home-dex-btn" onClick={() => setShowPokedex(true)}>
         {t.pokedex} {count}/{TOTAL}

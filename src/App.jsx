@@ -198,10 +198,11 @@ function HomeButtons({ onGoOut, onStay }) {
 
   useEffect(() => () => clearTimeout(pendingRef.current), []);
 
-  // 3초 초과 시 자동으로 '있을래' 선택
+  // 3초 초과 시 랜덤 선택
   const ratio = useAutoTimer(3, () => {
-    setFlash('stay');
-    pendingRef.current = setTimeout(onStay, 500);
+    const choice = Math.random() < 0.5 ? 'out' : 'stay';
+    setFlash(choice);
+    pendingRef.current = setTimeout(choice === 'out' ? onGoOut : onStay, 500);
   });
 
   return (
