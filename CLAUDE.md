@@ -71,7 +71,7 @@
 - OGG 포맷 (무음 프레임 없어 루프 끊김 없음), 모듈 로드 시 preload=auto
 - 씬 매핑: home→bgm_home, travel/fork→bgm_travel, encounter~duplicate→bgm_battle, caught→bgm_caught
 - 같은 트랙이면 씬 전환해도 계속 재생 (battleBGM이 encounter부터 flee/duplicate까지 유지)
-- 음소거 토글: 스크린 우상단 🔊/🔇 버튼, `useBgm(scene, muted)` 인자로 제어, `localStorage("bgm_muted")` 저장
+- 음소거 토글: 스크린 우상단 🔊/🔇 버튼, BGM+SFX 전체 제어, `localStorage("audio_muted")` 저장
 
 **SFX (`utils/sfx.js`)**
 - OGG 포맷, 모듈 로드 시 preload=auto, cloneNode()로 연속 재생 대응

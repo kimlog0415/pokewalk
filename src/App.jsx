@@ -53,7 +53,7 @@ export default function App() {
   const [fading, setFading] = useState(false);
   const [started, setStarted] = useState(false);
   const [startFading, setStartFading] = useState(false);
-  const [muted, setMuted] = useState(() => localStorage.getItem('bgm_muted') === '1');
+  const [muted, setMuted] = useState(() => localStorage.getItem('audio_muted') === '1');
   const revealTimerRef = useRef(null);
   const fadingRef = useRef(false);
   const { pokedex, catchPokemon, isDuplicate, markSeen, isNew } = usePokedex();
@@ -67,7 +67,7 @@ export default function App() {
     setSfxMuted(next);            // 즉시 반영 (음소거 해제 시 아래 클릭음이 들리도록)
     if (!next) playClick();       // 해제 시에만 확인음
     setMuted(next);
-    localStorage.setItem('bgm_muted', next ? '1' : '0');
+    localStorage.setItem('audio_muted', next ? '1' : '0');
   }
 
   const go = useCallback((nextScene, patch = {}) => {
