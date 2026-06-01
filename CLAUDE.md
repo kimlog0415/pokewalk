@@ -80,6 +80,7 @@
 - sfx_win/lose: RPS 결과 확정 즉시
 - sfx_battlePending: RPS 선택 직후 (1s 대기 중)
 - sfx_catch/flee/duplicate: 해당 씬 마운트 시 1회 (useRef 플래그로 StrictMode 이중 방지)
+- `setSfxMuted(bool)` 모듈 전역 플래그로 음소거 (App의 audio_muted 상태와 동기화)
 
 **공유 유틸/상수 (`utils/`, `hooks/`)**
 - `utils/constants.js` — `TIMINGS`(씬 타이밍 ms 전체), `AUTO_SELECT_SECONDS`, `DEFAULT_HABITAT`, `SPRITE_SMALL/ART` URL
