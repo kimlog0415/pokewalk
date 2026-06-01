@@ -28,8 +28,10 @@ const SCENE_BGM = {
   duplicate: TRACKS.battle,
 };
 
-export function useBgm(scene) {
+export function useBgm(scene, muted = false) {
   const currentRef = useRef(null);
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
 
   useEffect(() => {
     const next = SCENE_BGM[scene] ?? null;
@@ -41,11 +43,20 @@ export function useBgm(scene) {
     }
 
     currentRef.current = next;
-    if (next) {
+    if (next && !mutedRef.current) {
       next.currentTime = 0;
       next.play().catch(() => {});
     }
   }, [scene]);
+
+  // 음소거 토글: 끄면 현재 트랙 일시정지, 켜면 이어서 재생
+  useEffect(() => {
+    if (muted) {
+      currentRef.current?.pause();
+    } else {
+      currentRef.current?.play().catch(() => {});
+    }
+  }, [muted]);
 
   // 첫 click 시 모든 트랙 unlock
   // click은 React onClick(playClick 등) 이후 document까지 버블링되므로
@@ -54,7 +65,10 @@ export function useBgm(scene) {
     const resume = () => {
       Object.values(TRACKS).forEach(audio => {
         audio.play()
-          .then(() => { if (audio !== currentRef.current) audio.pause(); })
+          .then(() => {
+            // 현재 트랙이 아니거나 음소거 상태면 정지
+            if (audio !== currentRef.current || mutedRef.current) audio.pause();
+          })
           .catch(() => {});
       });
     };

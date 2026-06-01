@@ -135,6 +135,35 @@ body {
   font-style: italic;
 }
 
+/* BGM 음소거 토글 (스크린 우상단) */
+.mute-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  transition: background 0.12s;
+}
+
+.mute-btn:hover {
+  background: #3a3a3a;
+}
+
+.mute-btn:active {
+  transform: translateY(1px);
+}
+
 /* Game screen */
 .screen {
   width: 380px;

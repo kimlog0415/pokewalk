@@ -53,10 +53,20 @@ export default function App() {
   const [fading, setFading] = useState(false);
   const [started, setStarted] = useState(false);
   const [startFading, setStartFading] = useState(false);
+  const [muted, setMuted] = useState(() => localStorage.getItem('bgm_muted') === '1');
   const revealTimerRef = useRef(null);
   const fadingRef = useRef(false);
   const { pokedex, catchPokemon, isDuplicate, markSeen, isNew } = usePokedex();
-  useBgm(state.scene);
+  useBgm(state.scene, muted);
+
+  function toggleMute() {
+    playClick();
+    setMuted(m => {
+      const next = !m;
+      localStorage.setItem('bgm_muted', next ? '1' : '0');
+      return next;
+    });
+  }
 
   const go = useCallback((nextScene, patch = {}) => {
     setState(s => ({ ...s, scene: nextScene, ...patch }));
@@ -170,6 +180,13 @@ export default function App() {
         <div className="gameboy">
           <div className="screen-surround">
             <div className="screen-label">PokeWalk</div>
+            <button
+              className="mute-btn"
+              onClick={toggleMute}
+              aria-label={muted ? 'BGM 켜기' : 'BGM 음소거'}
+            >
+              {muted ? '🔇' : '🔊'}
+            </button>
             <div className="screen">
               {state.scene === 'home'      && <HomeScene pokedex={pokedex} phase={homePhase} onQuestion={started ? onHomeQuestion : () => {}} onStay={onHomeStay} onDone={startAdventure} markSeen={markSeen} isNew={isNew} />}
               {state.scene === 'travel'    && <TravelScene onDone={onTravelDone} />}
