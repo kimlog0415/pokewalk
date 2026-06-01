@@ -27,7 +27,11 @@ const _sounds = Object.fromEntries(
   })
 );
 
+let _muted = false;
+export function setSfxMuted(muted) { _muted = muted; }
+
 function play(key) {
+  if (_muted) return;
   _sounds[key].cloneNode().play().catch(() => {});
 }
 

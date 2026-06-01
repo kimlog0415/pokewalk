@@ -16,7 +16,7 @@ import bgCave       from './assets/backgrounds/bg_cave.png';
 import { usePokedex } from './hooks/usePokedex';
 import { useAutoTimer } from './hooks/useAutoTimer';
 import { useBgm } from './hooks/useBgm';
-import { playClick, playWin, playLose, playBattlePending } from './utils/sfx';
+import { playClick, playWin, playLose, playBattlePending, setSfxMuted } from './utils/sfx';
 import { RPS_KEYS, rpsResult, randomRps } from './utils/rps';
 import { TIMINGS, AUTO_SELECT_SECONDS } from './utils/constants';
 import { getHabitat } from './data/habitats';
@@ -59,13 +59,15 @@ export default function App() {
   const { pokedex, catchPokemon, isDuplicate, markSeen, isNew } = usePokedex();
   useBgm(state.scene, muted);
 
+  // 초기 음소거 상태를 SFX 모듈에 반영
+  useEffect(() => { setSfxMuted(muted); }, []);
+
   function toggleMute() {
-    playClick();
-    setMuted(m => {
-      const next = !m;
-      localStorage.setItem('bgm_muted', next ? '1' : '0');
-      return next;
-    });
+    const next = !muted;
+    setSfxMuted(next);            // 즉시 반영 (음소거 해제 시 아래 클릭음이 들리도록)
+    if (!next) playClick();       // 해제 시에만 확인음
+    setMuted(next);
+    localStorage.setItem('bgm_muted', next ? '1' : '0');
   }
 
   const go = useCallback((nextScene, patch = {}) => {
